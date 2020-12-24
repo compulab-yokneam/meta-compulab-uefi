@@ -1,0 +1,13 @@
+[Unit]
+Description=Sample service to grow data partition size
+DefaultDependencies=no
+Before=data.mount
+Before=sample-systemd-growfs-data.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/bin/sample-client-resize-data-part
+
+[Install]
+WantedBy=data.mount

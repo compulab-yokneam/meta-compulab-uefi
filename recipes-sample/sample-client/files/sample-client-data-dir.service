@@ -1,0 +1,13 @@
+[Unit]
+Description=Sample persistent data dir
+After=data.mount
+ConditionPathExists=!/data/sample
+
+[Service]
+Type=oneshot
+User=root
+Group=root
+ExecStart=/bin/mkdir -p -m 0700 /data/sample
+
+[Install]
+WantedBy=sample-client.service

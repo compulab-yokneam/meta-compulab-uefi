@@ -1,0 +1,12 @@
+[Unit]
+Description=Sample persistent machine ID for systemd
+ConditionPathExists=/etc/machine-id
+
+[Service]
+Type=oneshot
+User=root
+Group=root
+ExecStart=/usr/bin/sample-client-set-systemd-machine-id.sh
+
+[Install]
+WantedBy=sample-client.service

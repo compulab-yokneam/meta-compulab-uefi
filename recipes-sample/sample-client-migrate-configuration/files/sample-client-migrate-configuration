@@ -1,0 +1,35 @@
+#!/bin/sh
+
+# A simple shell script that helps migrating customers on the old setup
+# with a single sample.conf file. The new setup will keep a persistent
+# configuration file on the data partition, and a transient one (which
+# can be updated by a sample-update.
+
+which jq > /dev/null
+if [ "$?" -ne -"0" ]; then
+    echo "Dependency upon jq is not fullfilled."
+    exit 1
+fi
+
+# If one variable is present in SAMPLE_PERSISTENT_CONFIGURATION_VARS during build, but not in the sample.conf
+# file currently on the device - Fail.
+jq --exit-status '%jq-program-marker% | to_entries | .[] | .value == null | not' /etc/sample/sample.conf > /dev/null
+if [ "$?" -ne "0" ]; then
+    NON_EXISTENT_VARIABLE=$(jq '%jq-program-marker% | to_entries | .[] | select(.value == null) | .key' /etc/sample/sample.conf)
+    echo "Variable ${NON_EXISTENT_VARIABLE} was not found in /etc/sample/sample.conf"
+fi
+
+# Create the persistent configuration file from the variables set in
+# SAMPLE_PERSISTENT_CONFIGURATION_VARS.
+jq '%jq-program-marker%' /etc/sample/sample.conf > /data/sample/sample-persistent.conf
+sync
+mv /data/sample/sample-persistent.conf /data/sample/sample.conf
+sync
+
+# Remove the fields from the transient configuration file (/etc/sample/sample.conf),
+# that has now been moved into the persistent configuration (/data/sample/sample.conf).
+# No need to error-check here, as a missing field will simply behave like an identity transformation.
+jq 'del(%jq-delete-fields-marker%)' /etc/sample/sample.conf > sample-transient.conf
+sync
+mv sample-transient.conf /etc/sample/sample.conf
+sync

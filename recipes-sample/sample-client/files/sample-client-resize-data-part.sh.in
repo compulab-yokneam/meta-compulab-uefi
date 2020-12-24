@@ -1,0 +1,41 @@
+#!/bin/sh
+
+set -e
+
+# All sizes are in blocks of 512 bytes
+
+SAMPLE_STORAGE_DEVICE=@SAMPLE_STORAGE_DEVICE@
+SAMPLE_DATA_PART=@SAMPLE_DATA_PART@
+
+sample_storage_device_base=$(basename ${SAMPLE_STORAGE_DEVICE})
+sample_data_part_base=$(basename ${SAMPLE_DATA_PART})
+
+total_disk_size=$(cat /sys/block/${sample_storage_device_base}/size)
+
+data_part_size=$(cat /sys/block/${sample_storage_device_base}/${sample_data_part_base}/size)
+data_part_start=$(cat /sys/block/${sample_storage_device_base}/${sample_data_part_base}/start)
+
+if [ -z "${total_disk_size}" ] || [ -z "${data_part_size}" ] || [ -z "${data_part_start}" ]; then
+    echo "Failed to read disk sizes. Aborting..."
+    exit 1
+fi
+
+data_part_end=$(expr ${data_part_start} + ${data_part_size})
+
+# expr returns 1 (error) if the result is 0, which terminates the script
+# because of 'set -e'. Silence this error
+free_space=$(expr ${total_disk_size} - ${data_part_end} || true)
+
+if [ ${free_space} -eq 0 ]; then
+    echo "Disk has already been resized."
+    exit 0
+fi
+
+# Parted will refuse to resize the parition because it needs to re-write the
+# partition table and will refuse to do so unless there is a backup. This
+# ensures that GPT backup headers are written to the end of the disk.
+# Note: On some MBR systems using BusyBox's fdisk this call will fail,
+# this is OK (MBR systems don't have a backup header), always return true. 
+echo "w" | fdisk ${SAMPLE_STORAGE_DEVICE} &> /dev/null || true
+
+/usr/sbin/parted -s ${SAMPLE_STORAGE_DEVICE} resizepart @SAMPLE_DATA_PART_NUMBER@ 100%
