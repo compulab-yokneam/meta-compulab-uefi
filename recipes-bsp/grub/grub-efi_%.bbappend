@@ -1,1 +1,1 @@
-GRUB_BUILDIN_append_mender-grub = " gzio "
+GRUB_BUILDIN_append = " gzio "
