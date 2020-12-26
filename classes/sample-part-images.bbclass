@@ -127,7 +127,6 @@ EOF
 
     cat >> "$wks" <<EOF
 part --source rawcopy --sourceparams="file=${IMGDEPLOYDIR}/${IMAGE_LINK_NAME}.${ARTIFACTIMG_FSTYPE}" --ondisk "$ondisk_dev" --align $alignment_kb --fixed-size ${SAMPLE_CALC_ROOTFS_SIZE}k $part_type_params
-part --source rawcopy --sourceparams="file=${IMGDEPLOYDIR}/${IMAGE_LINK_NAME}.${ARTIFACTIMG_FSTYPE}" --ondisk "$ondisk_dev" --align $alignment_kb --fixed-size ${SAMPLE_CALC_ROOTFS_SIZE}k $part_type_params
 EOF
 
     if [ "${SAMPLE_SWAP_PART_SIZE_MB}" -ne "0" ]; then

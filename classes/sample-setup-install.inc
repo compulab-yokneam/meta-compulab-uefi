@@ -28,8 +28,8 @@ def sample_calculate_rootfs_size_kb(total_mb, boot_mb, data_mb, swap_mb, alignme
     # Subtract reserved raw space.
     calc_space = calc_space - reserved_space_size
 
-    # Split in two.
-    calc_space = calc_space / 2
+    # Do not split in two.
+    # calc_space = calc_space / 2
 
     # Need to align to partition alignment, and round down.
     calc_space = int(calc_space / alignment) * alignment
