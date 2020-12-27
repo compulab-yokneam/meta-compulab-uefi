@@ -9,6 +9,10 @@ set bootargs="${bootargs} ${console_bootargs} ${rootargs}"
 default=boot
 timeout=10
 
-menuentry 'boot' {
-linux ${image} LABEL=rootfs root=${root} ${bootargs}
+menuentry "boot" {
+	linux (hd0,gpt2)${image} root=${root} ${bootargs}
+}
+
+menuentry "debug" {
+	linux (hd0,gpt2)${image} root=${root} ${bootargs} debug initcall_debug
 }
