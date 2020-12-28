@@ -1,1 +1,0 @@
-../sample-client/README-releasing.md
