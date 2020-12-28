@@ -18,7 +18,7 @@ python() {
                      % dep)
 }
 
-SAMPLE_BOOT_PART_MOUNT_LOCATION = "/boot/efi"
+SAMPLE_BOOT_PART_MOUNT_LOCATION = "/boot"
 SAMPLE_BOOT_PART_MOUNT_LOCATION_sample-uboot = "/uboot"
 SAMPLE_BOOT_PART_MOUNT_LOCATION_sample-grub_sample-bios = "/boot/grub"
 
