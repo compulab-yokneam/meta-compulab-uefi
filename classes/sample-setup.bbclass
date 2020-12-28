@@ -203,7 +203,7 @@ SAMPLE_PERSISTENT_CONFIGURATION_VARS ?= "RootfsPartA RootfsPartB"
 # --------------------------- END OF CONFIGURATION -----------------------------
 
 IMAGE_INSTALL_append = " sample-client"
-IMAGE_CLASSES += "sample-part-images sample-ubimg sample-artifactimg sample-dataimg sample-bootimg sample-datatar"
+IMAGE_CLASSES += "sample-part-images sample-artifactimg sample-dataimg sample-bootimg sample-datatar"
 
 # Originally defined in bitbake.conf. We define them here so that images with
 # the same MACHINE name, but different SAMPLE_DEVICE_TYPE, will not result in
@@ -410,10 +410,5 @@ python sample_vars_handler() {
 # Including these does not mean that all these features will be enabled, just
 # that their configuration will be considered. Use DISTRO_FEATURES to enable and
 # disable features.
-include sample-setup-bios.inc
-include sample-setup-grub.inc
 include sample-setup-image.inc
 include sample-setup-install.inc
-include sample-setup-systemd.inc
-include sample-setup-ubi.inc
-include sample-setup-uboot.inc
