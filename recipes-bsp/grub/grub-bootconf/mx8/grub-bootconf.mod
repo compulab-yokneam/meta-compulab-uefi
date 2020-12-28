@@ -9,22 +9,3 @@ set bootargs="${bootargs} ${console_bootargs} ${rootargs}"
 default=Boot
 timeout=10
 
-menuentry "Boot" {
-	devicetree (hd0,gpt2)/boot/sbc-mcm-imx8m-mini.dtb
-	linux (hd0,gpt2)${image} root=${root} ${bootargs}
-}
-
-menuentry "Installer" {
-	devicetree (hd0,gpt2)/boot/sbc-mcm-imx8m-mini.dtb
-	linux (hd0,gpt2)${image} root=${root} ${bootargs} init=/usr/local/bin/cl-init
-}
-
-menuentry "Debug" {
-	devicetree (hd0,gpt2)/boot/sbc-mcm-imx8m-mini.dtb
-	linux (hd0,gpt2)${image} root=${root} ${bootargs} debug initcall_debug
-}
-
-menuentry "Thermal" {
-	devicetree (hd0,gpt2)/boot/mx8m-mini-thermal.dtb
-	linux (hd0,gpt2)${image} root=${root} ${bootargs}
-}
