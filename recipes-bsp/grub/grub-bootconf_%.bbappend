@@ -5,31 +5,50 @@ build_efi_cfg[noexec] = "1"
 SRC_URI += "file://grub-bootconf.mod"
 
 do_install_prepend() {
+
 bootconf_in="bootconf.in"
 rm -rf ${bootconf_in}
 
-for dtb_full_path in ${KERNEL_DEVICETREE}; do
-dtb_path=$(basename ${dtb_full_path})
-dtb_install=${dtb_install:-${dtb_path}}
+dtb_default="${GRUB_BOOT_DEVICETREE}"
 
 echo "
-menuentry \"Boot Linux with ${dtb_path}\" {
+default=${dtb_default}
+timeout=10
+" >> ${bootconf_in}
+
+echo "
+menuentry \"Boot Linux\" --id=\"${dtb_default}\" {
+	devicetree (hd0,gpt2)/boot/${dtb_default}
+	linux (hd0,gpt2)\${image} root=\${root} \${bootargs}
+}" >> ${bootconf_in}
+
+echo "
+menuentry \"Install Linux\" --id=\"Install\" {
+	devicetree (hd0,gpt2)/boot/${dtb_default}
+	linux (hd0,gpt2)\${image} root=\${root} \${bootargs} init=/usr/local/bin/cl-init
+}" >> ${bootconf_in}
+
+echo "
+submenu \"Advanced Boot Options\" --id=\"Advanced_boot_options\" {
+" >> ${bootconf_in}
+
+for dtb_full_path in ${KERNEL_DEVICETREE}; do
+dtb_path=$(basename ${dtb_full_path})
+
+echo "
+menuentry \"Boot Debug Linux with ${dtb_path}\" --id=\"${dtb_path}_debug\" {
 	devicetree (hd0,gpt2)/boot/${dtb_path}
-	linux (hd0,gpt2)/\${image} root=\${root} \${bootargs}
+	linux (hd0,gpt2)\${image} root=\${root} \${bootargs} debug initcall_debug
 }" >> ${bootconf_in}
 
 done
 
 echo "
-menuentry \"Install Linux\" {
-	devicetree (hd0,gpt2)/boot/${dtb_install}
-	linux (hd0,gpt2)/\${image} root=\${root} \${bootargs} init=/usr/local/bin/cl-init
 }" >> ${bootconf_in}
 
-cat ${bootconf_in} >> grub-bootconf.mod
-cp grub-bootconf.mod grub-bootconf
+cat grub-bootconf.mod ${bootconf_in} > grub-bootconf
 
-CONSOLE=$(echo -n ${SERIAL_CONSOLES} | awk -F";" '($0=$2)')","$(echo -n ${SERIAL_CONSOLES} | awk -F";" '($0=$1)')"n8"
-sed -i "s/\(console\)=.*\"$/\1=${CONSOLE}\"/" grub-bootconf.mod
+console=$(echo -n "${SERIAL_CONSOLES}" | awk -F";" '($0=$2","$1"n8")')
+sed -i "s/\(console\)=.*\"$/\1=${console}\"/" grub-bootconf.mod
 
 }
