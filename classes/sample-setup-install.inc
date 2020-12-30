@@ -14,7 +14,7 @@ def sample_get_part_overhead_kb(d):
 SAMPLE_PARTITIONING_OVERHEAD_KB ??= "${SAMPLE_PARTITIONING_OVERHEAD_KB_DEFAULT}"
 SAMPLE_PARTITIONING_OVERHEAD_KB_DEFAULT = "${@sample_get_part_overhead_kb(d)}"
 
-def sample_calculate_rootfs_size_kb(total_mb, boot_mb, data_mb, swap_mb, alignment, overhead_kb, reserved_space_size):
+def sample_calculate_rootfs_size_kb(total_mb, boot_mb, data_mb, swap_mb, alignment, overhead_kb, reserved_space_size, copies):
     import math
 
     # Space used by each of the partitions, aligned to partition alignment
@@ -29,7 +29,7 @@ def sample_calculate_rootfs_size_kb(total_mb, boot_mb, data_mb, swap_mb, alignme
     calc_space = calc_space - reserved_space_size
 
     # Do not split in two.
-    # calc_space = calc_space / 2
+    calc_space = calc_space / copies
 
     # Need to align to partition alignment, and round down.
     calc_space = int(calc_space / alignment) * alignment
@@ -46,7 +46,8 @@ SAMPLE_CALC_ROOTFS_SIZE = "${@sample_calculate_rootfs_size_kb(${SAMPLE_STORAGE_T
                                                               ${SAMPLE_SWAP_PART_SIZE_MB}, \
                                                               ${SAMPLE_PARTITION_ALIGNMENT}, \
                                                               ${SAMPLE_PARTITIONING_OVERHEAD_KB}, \
-                                                              ${SAMPLE_RESERVED_SPACE_BOOTLOADER_DATA})}"
+                                                              ${SAMPLE_RESERVED_SPACE_BOOTLOADER_DATA}, \
+                                                              ${SAMPLE_ROOTFS_COPIES})}"
 
 # Gently apply this as the default image size.
 # But subtract IMAGE_ROOTFS_EXTRA_SPACE, since it will be added automatically
