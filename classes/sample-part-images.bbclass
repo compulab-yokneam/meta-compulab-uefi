@@ -135,9 +135,11 @@ part swap --ondisk "$ondisk_dev" --fstype=swap --label swap --align $alignment_k
 EOF
     fi
 
+    if [ "${SAMPLE_DATA_PART_SIZE_MB}" -ne "0" ]; then
     cat >> "$wks" <<EOF
 part --source rawcopy --sourceparams="file=${IMGDEPLOYDIR}/${IMAGE_LINK_NAME}.dataimg" --ondisk "$ondisk_dev" --align $alignment_kb --fixed-size ${SAMPLE_DATA_PART_SIZE_MB} $part_type_params
 EOF
+    fi
     # added extra partitions if exists
     cat >> "$wks" <<EOF
 ${@get_extra_parts_wks(d)}

@@ -46,8 +46,10 @@ sample_update_fstab_file() {
         fi
     fi
 
-    mkdir -p ${IMAGE_ROOTFS}/data
-    printf "%-20s %-20s %-10s %-21s %-2s %s\n" ${tmpDataPart} /data ${SAMPLE_DATA_PART_FSTYPE} ${SAMPLE_DATA_PART_FSTAB_OPTS} 0 2 >> ${IMAGE_ROOTFS}${sysconfdir}/fstab
+    if [ "${SAMPLE_DATA_PART_SIZE_MB}" -ne "0" ]; then
+	    mkdir -p ${IMAGE_ROOTFS}/data
+	    printf "%-20s %-20s %-10s %-21s %-2s %s\n" ${tmpDataPart} /data ${SAMPLE_DATA_PART_FSTYPE} ${SAMPLE_DATA_PART_FSTAB_OPTS} 0 2 >> ${IMAGE_ROOTFS}${sysconfdir}/fstab
+    fi
 
     if [ -n "${SAMPLE_EXTRA_PARTS}" ]; then
         local extra_part_fstab="${@get_extra_parts_fstab(d)}"

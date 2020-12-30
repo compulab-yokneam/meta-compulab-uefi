@@ -1,7 +1,7 @@
 # Class to create the "dataimg" type, which contains the data partition as a raw
 # filesystem.
 
-IMAGE_CMD_dataimg() {
+_IMAGE_CMD_dataimg() {
     if [ ${SAMPLE_DATA_PART_FSTYPE_TO_GEN} = "btrfs" ]; then
         force_flag="-f"
         root_dir_flag="-r"
@@ -19,11 +19,17 @@ IMAGE_CMD_dataimg() {
         ${SAMPLE_DATA_PART_FSOPTS}
     install -m 0644 "${WORKDIR}/data.${SAMPLE_DATA_PART_FSTYPE_TO_GEN}" "${IMGDEPLOYDIR}/${IMAGE_NAME}.dataimg"
 }
+
 IMAGE_CMD_dataimg_sample-image-ubi() {
     mkfs.ubifs -o "${WORKDIR}/data.ubifs" -r "${IMAGE_ROOTFS}/data" ${MKUBIFS_ARGS}
     install -m 0644 "${WORKDIR}/data.ubifs" "${IMGDEPLOYDIR}/${IMAGE_NAME}.dataimg"
 }
 
+IMAGE_CMD_dataimg() {
+    if [ "${SAMPLE_DATA_PART_SIZE_MB}" -ne "0" ]; then
+        _IMAGE_CMD_dataimg
+    fi
+}
 # We need the data contents intact.
 do_image_dataimg[respect_exclude_path] = "0"
 
