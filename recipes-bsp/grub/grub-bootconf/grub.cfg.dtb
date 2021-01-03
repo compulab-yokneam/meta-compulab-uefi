@@ -1,0 +1,6 @@
+for dtb in DEVICE_TREE_LIST;do
+menuentry "Set ${dtb}" --id="${dtb}" ${dtb} {
+	fdt_file=${2}
+	save_env fdt_file
+}
+done

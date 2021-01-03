@@ -1,0 +1,4 @@
+menuentry "Set Debug" --id="Debug" {
+	debug="debug initcall_debug"
+	save_env debug
+}

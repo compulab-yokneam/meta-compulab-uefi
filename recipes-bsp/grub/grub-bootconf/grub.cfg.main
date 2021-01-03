@@ -1,0 +1,73 @@
+# CompuLab GRUB config
+insmod echo
+insmod loadenv
+insmod fdt
+insmod sleep
+load_env
+
+# Linux
+default_rootdev="GRUB_ROOT_DEVICE"
+default_image="/boot/Image"
+default_console="console=console,speed"
+default_rootargs="ro rootwait"
+default_init"=/usr/local/bin/cl-init"
+
+# Grub
+default_boot="Boot"
+default_part=2
+default_fdt="GRUB_BOOT_DEVICETREE"
+timeout=10
+
+if [ -z "${rootdev}" ]; then
+    rootdev=${default_rootdev}
+    save_env rootdev
+fi
+
+if [ -z "${rootargs}" ]; then
+    rootargs=${default_rootargs}
+    save_env rootargs
+fi
+
+if [ -z "${image}" ]; then
+    root=${default_image}
+    save_env image
+fi
+
+if [ -z "${console}" ]; then
+    console=${default_console}
+    save_env console
+fi
+
+if [ -z "${default}" ]; then
+    default=${default_boot}
+    save_env default
+fi
+
+if [ -z "${part}" ]; then
+    part=${default_part}
+    save_env part
+fi
+
+if [ -z "${fdt_file}" ]; then
+    fdt_file=${default_fdt}
+    save_env fdt_file
+fi
+
+if [ -z "${init}" ]; then
+    init=${default_init}
+    save_env init
+fi
+
+bootargs="root=${rootdev}${part} ${rootargs} console=${console}"
+
+menuentry "Boot Linux" --id="Boot" {
+    load_env
+    devicetree (hd0,gpt${part})/boot/${fdt_file}
+    linux (hd0,gpt${part})${image} ${bootargs} ${debug}
+}
+
+menuentry "Install Linux" --id="Install" {
+    load_env
+    devicetree (hd0,gpt${part})/boot/${fdt_file}
+    linux (hd0,gpt${part})${image} ${bootargs} ${debug} ${init}
+}
