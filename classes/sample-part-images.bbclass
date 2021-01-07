@@ -119,19 +119,19 @@ EOF
     if [ "${SAMPLE_BOOT_PART_SIZE_MB}" -ne "0" ]; then
         sample_merge_bootfs_and_image_boot_files
         cat >> "$wks" <<EOF
-part --source rootfs --rootfs-dir ${WORKDIR}/bootfs.${BB_CURRENTTASK} --ondisk "$ondisk_dev" --fstype=vfat --label boot --align $alignment_kb --fixed-size ${SAMPLE_BOOT_PART_SIZE_MB} --active $boot_part_params
+part --source rootfs --rootfs-dir ${WORKDIR}/bootfs.${BB_CURRENTTASK} --ondisk "$ondisk_dev" --fstype=vfat --label boot --align $alignment_kb --fixed-size ${SAMPLE_BOOT_PART_SIZE_MB} --active $boot_part_params --uuid=${PARTUUID_BOOT}
 EOF
     elif [ -n "$IMAGE_BOOT_FILES_STRIPPED" ]; then
         bbwarn "SAMPLE_BOOT_PART_SIZE_MB is set to zero, but IMAGE_BOOT_FILES is not empty. The files are being omitted from the image."
     fi
 
     cat >> "$wks" <<EOF
-part --source rawcopy --sourceparams="file=${IMGDEPLOYDIR}/${IMAGE_LINK_NAME}.${ARTIFACTIMG_FSTYPE}" --ondisk "$ondisk_dev" --align $alignment_kb --fixed-size ${SAMPLE_CALC_ROOTFS_SIZE}k $part_type_params
+part --source rawcopy --sourceparams="file=${IMGDEPLOYDIR}/${IMAGE_LINK_NAME}.${ARTIFACTIMG_FSTYPE}" --ondisk "$ondisk_dev" --align $alignment_kb --fixed-size ${SAMPLE_CALC_ROOTFS_SIZE}k $part_type_params --uuid=${PARTUUID}
 EOF
 
     if [ "${SAMPLE_ROOTFS_COPIES}" -eq "2" ]; then
     cat >> "$wks" <<EOF
-part --source rawcopy --sourceparams="file=${IMGDEPLOYDIR}/${IMAGE_LINK_NAME}.${ARTIFACTIMG_FSTYPE}" --ondisk "$ondisk_dev" --align $alignment_kb --fixed-size ${SAMPLE_CALC_ROOTFS_SIZE}k $part_type_params
+part --source rawcopy --sourceparams="file=${IMGDEPLOYDIR}/${IMAGE_LINK_NAME}.${ARTIFACTIMG_FSTYPE}" --ondisk "$ondisk_dev" --align $alignment_kb --fixed-size ${SAMPLE_CALC_ROOTFS_SIZE}k $part_type_params --uuid=${PARTUUID_2}
 EOF
     fi
 

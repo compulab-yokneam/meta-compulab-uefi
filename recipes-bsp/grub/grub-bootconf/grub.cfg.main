@@ -58,16 +58,26 @@ if [ -z "${init}" ]; then
     save_env init
 fi
 
-bootargs="root=${rootdev}${part} ${rootargs} console=${console}"
+UUID=%%UUID%%
+PARTUUID=%%PARTUUID%%
+bootargs="root=PARTUUID=${PARTUUID} ${rootargs} console=${console}"
 
 menuentry "Boot Linux" --id="Boot" {
     load_env
-    devicetree (hd0,gpt${part})/boot/${fdt_file}
-    linux (hd0,gpt${part})${image} ${bootargs} ${debug}
+
+    search --no-floppy --fs-uuid --set=root ${UUID}
+    bootargs="root=PARTUUID=${PARTUUID} ${rootargs} console=${console}"
+
+    devicetree /boot/${fdt_file}
+    linux /${image} ${bootargs} ${debug}
 }
 
 menuentry "Install Linux" --id="Install" {
     load_env
-    devicetree (hd0,gpt${part})/boot/${fdt_file}
-    linux (hd0,gpt${part})${image} ${bootargs} ${debug} ${init}
+
+    search --no-floppy --fs-uuid --set=root ${UUID}
+    bootargs="root=PARTUUID=${PARTUUID} ${rootargs} console=${console}"
+
+    devicetree /boot/${fdt_file}
+    linux /${image} ${bootargs} ${debug} ${init}
 }

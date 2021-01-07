@@ -36,6 +36,14 @@ sample_update_fstab_file() {
         tmpDataPart="PARTUUID=${@sample_get_partuuid_from_device(d, '${SAMPLE_DATA_PART}')}"
     fi
 
+    if [ -n "${PARTUUID_BOOT}" ]; then
+        tmpBootPart="PARTUUID=${PARTUUID_BOOT}"
+    fi
+
+    if [ -n "${PARTUUID_DATA}" ]; then
+        tmpDataPart="PARTUUID=${PARTUUID_DATA}"
+    fi
+
     if ! ${@bb.utils.contains('DISTRO_FEATURES', 'sample-image-ubi', 'true', 'false', d)}; then
         if [ "${SAMPLE_BOOT_PART_SIZE_MB}" != "0" ] && [ -n "${SAMPLE_BOOT_PART}" ]; then
             echo "# Where the U-Boot environment resides; for devices with SD card support ONLY!" >> ${IMAGE_ROOTFS}${sysconfdir}/fstab
