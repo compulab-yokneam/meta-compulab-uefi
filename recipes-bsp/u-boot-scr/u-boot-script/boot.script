@@ -1,3 +1,7 @@
-load usb 0 ${loadaddr} EFI/BOOT/grub-efi-bootaa64.efi && bootefi ${loadaddr} -
-load mmc 1 ${loadaddr} EFI/BOOT/grub-efi-bootaa64.efi && bootefi ${loadaddr} -
-load mmc 2 ${loadaddr} EFI/BOOT/grub-efi-bootaa64.efi && bootefi ${loadaddr} -
+setenv fdt_addr
+setenv grub_efi 'EFI/BOOT/grub-efi-bootaa64.efi'
+setenv boot_efi 'bootefi ${loadaddr}'
+
+load usb 0 ${loadaddr} ${grub_efi} && run boot_efi
+load mmc 1 ${loadaddr} ${grub_efi} && run boot_efi
+load mmc 2 ${loadaddr} ${grub_efi} && run boot_efi
