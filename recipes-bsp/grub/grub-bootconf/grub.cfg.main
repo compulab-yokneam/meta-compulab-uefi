@@ -10,7 +10,7 @@ default_rootdev="GRUB_ROOT_DEVICE"
 default_image="/boot/Image"
 default_console="console=console,speed"
 default_rootargs="ro rootwait"
-default_init"=/usr/local/bin/cl-init"
+default_init="init=/usr/local/bin/cl-init"
 
 # Grub
 default_boot="Boot"
@@ -24,12 +24,12 @@ if [ -z "${rootdev}" ]; then
 fi
 
 if [ -z "${rootargs}" ]; then
-    rootargs=${default_rootargs}
+    rootargs="${default_rootargs}"
     save_env rootargs
 fi
 
 if [ -z "${image}" ]; then
-    root=${default_image}
+    image=${default_image}
     save_env image
 fi
 
