@@ -25,6 +25,6 @@ EOF
 |${BUILDDIR}/tmp/deploy/images/${MACHINE}/core-image-full-cmdline-mcm-imx8m-mini.uefiimg
 
 |```bitbake -k fsl-image-qt5-validation-imx```
-|${BUILDDIR}/tmp/deploy/images/${MACHINE}/fsl-image-qt5-validation-imx.uefiimg
+|${BUILDDIR}/tmp/deploy/images/${MACHINE}/fsl-image-qt5-validation-imx-mcm-imx8m-mini.uefiimg
 
 |===
