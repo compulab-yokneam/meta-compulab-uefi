@@ -202,7 +202,6 @@ SAMPLE_PERSISTENT_CONFIGURATION_VARS ?= "RootfsPartA RootfsPartB"
 
 # --------------------------- END OF CONFIGURATION -----------------------------
 
-IMAGE_INSTALL_append = " sample-client"
 IMAGE_CLASSES += "sample-part-images sample-artifactimg sample-dataimg sample-bootimg sample-datatar"
 
 # Originally defined in bitbake.conf. We define them here so that images with
@@ -231,7 +230,6 @@ python() {
 
         # Install of Sample, with the minimum components. This includes no
         # references to specific partition layouts.
-        'sample-client-install',
 
         # Include components for Sample-partitioned images. This will create
         # files that rely on the Sample partition layout.
