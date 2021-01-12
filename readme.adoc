@@ -13,7 +13,9 @@ git clone https://github.com/compulab-yokneam/meta-compulab-uefi.git ${BSPDIR}/s
 
 * Update the conf/bblayers.conf:
 [source,code]
+cat << EOF >> ${BSPDIR}/conf/bblayers.conf
 BBLAYERS += " ${BSPDIR}/sources/meta-compulab-uefi "
+EOF
 
 * Issue a supported image build:
 |===
