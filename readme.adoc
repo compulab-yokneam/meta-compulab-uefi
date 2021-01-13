@@ -3,7 +3,7 @@
 This layer adds an option to boot the CompuLab i.MX8 boards using bootefi + grub.
 
 # Prerequisites
-* The https://github.com/compulab-yokneam/meta-bsp-imx8mm[meta-bsp-imx8mm] meta-layer must be deployed first.
+* The https://github.com/compulab-yokneam/meta-bsp-imx8mm/tree/rel_imx_5.4.24_2.1.0-dev[meta-bsp-imx8mm] meta-layer must be deployed first.
 
 # How to use
 
