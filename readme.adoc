@@ -9,11 +9,11 @@ This layer adds an option to boot the CompuLab i.MX8 boards using bootefi + grub
 
 * Download the layer:
 [source,code]
-git clone https://github.com/compulab-yokneam/meta-compulab-uefi.git ${BSPDIR}/sources/meta-compulab-uefi
+git clone https://github.com/compulab-yokneam/meta-compulab-uefi.git ${BUILDDIR}/../sources/meta-compulab-uefi
 
 * Update the conf/bblayers.conf:
 [source,code]
-cat << EOF >> ${BSPDIR}/conf/bblayers.conf
+cat << EOF >> ${BUILDDIR}/conf/bblayers.conf
 BBLAYERS += " ${BSPDIR}/sources/meta-compulab-uefi "
 EOF
 
