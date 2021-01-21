@@ -2,3 +2,15 @@ menuentry "Set Debug" --id="Debug" {
 	debug="debug initcall_debug"
 	save_env debug
 }
+
+if [ -z "${fbcon}" ]; then
+menuentry "Set frame buffer rotation" --id="set_fbcon_rot" {
+	fbcon="fbcon=rotate:1"
+	save_env fbcon
+}
+else
+menuentry "Reset frame buffer rotation" --id="reset_fbcon_rot" {
+	unset fbcon
+	save_env fbcon
+}
+fi

@@ -69,7 +69,7 @@ menuentry "Boot Linux" --id="Boot" {
     bootargs="root=PARTUUID=${PARTUUID} ${rootargs} console=${console}"
 
     devicetree /boot/${fdt_file}
-    linux /${image} ${bootargs} ${debug}
+    linux /${image} ${bootargs} ${debug} ${fbcon}
 }
 
 menuentry "Install Linux" --id="Install" {

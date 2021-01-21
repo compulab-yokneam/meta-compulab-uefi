@@ -30,7 +30,7 @@ grub_debug() {
 
 grub_cfg_create() {
     grub_main
-    printf "\nsubmenu \"Advanced Boot Options\" --id=\"Advanced_boot_options\" {\n\n"
+    printf "\nsubmenu \"Advanced Boot Options\" --id=\"Advanced_boot_options\" {\n\tload_env\n"
     grub_dtb
     grub_debug
     printf "\n}\n"
