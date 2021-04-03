@@ -13,6 +13,7 @@ do_compile() {
 
 do_install() {
 	install -d ${D}/boot
+	install -m 0644 boot.scr ${D}/boot/boot.scr
 	install -m 0644 ${WORKDIR}/boot.script ${D}/boot/boot.script
 }
 
