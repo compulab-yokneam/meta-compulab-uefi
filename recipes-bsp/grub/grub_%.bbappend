@@ -4,10 +4,12 @@ do_install_append() {
 	GRUB_MOD_DST_PATH="${D}/boot/EFI/BOOT/${ARCH_DIR}"
 	GRUB_MOD_SRC_PATH="${D}/usr/lib/grub/${ARCH_DIR}"
 
-	install -d ${GRUB_MOD_DST_PATH}
-	for mod in ${GRUB_MOD_SRC_PATH}/*.mod ;do
-		install -m 0644 ${mod} ${GRUB_MOD_DST_PATH}/
-	done
+	if [ -d ${GRUB_MOD_SRC_PATH} ];then
+		install -d ${GRUB_MOD_DST_PATH}
+		for mod in ${GRUB_MOD_SRC_PATH}/*.mod ;do
+			install -m 0644 ${mod} ${GRUB_MOD_DST_PATH}/
+		done
+	fi
 }
 
 PACKAGES =+ "${PN}-bootmod"
