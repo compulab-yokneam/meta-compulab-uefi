@@ -1,4 +1,8 @@
 # CompuLab GRUB config
+insmod reboot
+insmod progress
+insmod help
+insmod lsefi
 insmod echo
 insmod loadenv
 insmod fdt
@@ -68,7 +72,7 @@ menuentry "Boot Linux" --id="Boot" {
     search --no-floppy --fs-uuid --set=root ${UUID}
     bootargs="root=PARTUUID=${PARTUUID} ${rootargs} console=${console}"
 
-    devicetree /boot/${fdt_file}
+    echo "Booting ${fdt_file} config ..."
     linux /boot/${image} ${bootargs} ${debug} ${fbcon}
 }
 
@@ -78,6 +82,5 @@ menuentry "Install Linux" --id="Install" {
     search --no-floppy --fs-uuid --set=root ${UUID}
     bootargs="root=PARTUUID=${PARTUUID} ${rootargs} console=${console}"
 
-    devicetree /boot/${fdt_file}
     linux /boot/${image} ${bootargs} ${debug} ${init}
 }
