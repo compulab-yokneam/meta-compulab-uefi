@@ -9,7 +9,7 @@ setenv load_efi 'load ${devtype} ${devnum} ${loadaddr} ${grub_efi}'
 
 # fdt
 setenv load_env 'load ${devtype} ${devnum} ${initrd_addr} ${grub_env} && env import -t ${initrd_addr} ${filesize}'
-setenv load_fdt 'run load_env; load ${devtype} ${devnum} ${fdt_addr} ${fdt_file}'
+setenv load_fdt 'run load_env; load ${devtype} ${devnum} ${fdt_addr} ${fdtfile}'
 
 # boot
 setenv boot_cmd 'run load_fdt && run load_efi && run boot_efi'

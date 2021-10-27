@@ -1,7 +1,7 @@
 for dtb in DEVICE_TREE_LIST;do
 menuentry "Set ${dtb}" --id="${dtb}" ${dtb} {
-	fdt_file=${2}
-	save_env fdt_file
-	echo "The ${fdt_file} config is applied. Resetting..."; sleep 1; reboot
+	fdtfile=${2}
+	save_env fdtfile
+	echo "The ${fdtfile} config is applied. Resetting..."; sleep 1; reboot
 }
 done

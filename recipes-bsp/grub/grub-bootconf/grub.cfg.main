@@ -52,9 +52,9 @@ if [ -z "${part}" ]; then
     save_env part
 fi
 
-if [ -z "${fdt_file}" ]; then
-    fdt_file=${default_fdt}
-    save_env fdt_file
+if [ -z "${fdtfile}" ]; then
+    fdtfile=${default_fdt}
+    save_env fdtfile
 fi
 
 if [ -z "${init}" ]; then
@@ -72,7 +72,7 @@ menuentry "Boot Linux" --id="Boot" {
     search --no-floppy --fs-uuid --set=root ${UUID}
     bootargs="root=PARTUUID=${PARTUUID} ${rootargs} console=${console}"
 
-    echo "Booting ${fdt_file} config ..."
+    echo "Booting ${fdtfile} config ..."
     linux /boot/${image} ${bootargs} ${debug} ${fbcon}
 }
 
