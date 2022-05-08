@@ -18,8 +18,8 @@ do_install() {
 	install -m 0755 ${S}/cl-root ${D}/usr/local/bin/
 }
 
-FILES_${PN} = " \
+FILES:${PN} = " \
 	/usr/local/bin/* \
 "
 
-RDEPENDS_${PN} = "bash dialog grub-editenv" 
+RDEPENDS:${PN} = "bash dialog grub-editenv" 

@@ -25,7 +25,7 @@ IMAGE_CMD_dataimg_sample-image-ubi() {
     install -m 0644 "${WORKDIR}/data.ubifs" "${IMGDEPLOYDIR}/${IMAGE_NAME}.dataimg"
 }
 
-IMAGE_CMD_dataimg() {
+IMAGE_CMD:dataimg() {
     if [ "${SAMPLE_DATA_PART_SIZE_MB}" -ne "0" ]; then
         _IMAGE_CMD_dataimg
     fi

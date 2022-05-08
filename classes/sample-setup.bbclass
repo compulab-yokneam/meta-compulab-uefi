@@ -213,8 +213,8 @@ IMAGE_LINK_NAME = "${IMAGE_BASENAME}-${SAMPLE_DEVICE_TYPE}"
 # SAMPLE_FEATURES_ENABLE and SAMPLE_FEATURES_DISABLE map to
 # DISTRO_FEATURES_BACKFILL and DISTRO_FEATURES_BACKFILL_CONSIDERED,
 # respectively.
-DISTRO_FEATURES_BACKFILL_append = " ${SAMPLE_FEATURES_ENABLE}"
-DISTRO_FEATURES_BACKFILL_CONSIDERED_append = " ${SAMPLE_FEATURES_DISABLE}"
+DISTRO_FEATURES_BACKFILL:append = " ${SAMPLE_FEATURES_ENABLE}"
+DISTRO_FEATURES_BACKFILL_CONSIDERED:append = " ${SAMPLE_FEATURES_DISABLE}"
 
 python() {
     # Add all possible Sample features here. This list is here to have an
@@ -283,7 +283,7 @@ python() {
             if feature not in sample_features:
                 bb.fatal("%s from SAMPLE_FEATURES_ENABLE or DISTRO_FEATURES is not a valid Sample feature."
                          % feature)
-            d.setVar('OVERRIDES_append', ':%s' % feature)
+            d.setVar('OVERRIDES:append', ':%s' % feature)
 
             # Verify that all 'sample-' features are added using SAMPLE_FEATURES
             # variables. This is important because we base some decisions on

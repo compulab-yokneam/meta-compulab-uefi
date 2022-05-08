@@ -5,10 +5,10 @@ IMAGE_FSTYPES += "${@bb.utils.contains('DISTRO_FEATURES', 'sample-image-uefi', '
 IMAGE_FSTYPES += "${@bb.utils.contains('DISTRO_FEATURES', 'sample-image-bios', ' biosimg biosimg.bmap', '', d)}"
 IMAGE_FSTYPES += "${@bb.utils.contains('DISTRO_FEATURES', 'sample-image-gpt', ' gptimg gptimg.bmap', '', d)}"
 
-MACHINE_ESSENTIAL_EXTRA_RDEPENDS_append_sample-image_x86 =     " kernel-image"
-MACHINE_ESSENTIAL_EXTRA_RDEPENDS_append_sample-image_x86-64 =  " kernel-image"
-MACHINE_ESSENTIAL_EXTRA_RDEPENDS_append_sample-image_arm =     " kernel-image kernel-devicetree"
-MACHINE_ESSENTIAL_EXTRA_RDEPENDS_append_sample-image_aarch64 = " kernel-image kernel-devicetree"
+MACHINE_ESSENTIAL_EXTRA_RDEPENDS:append:sample-image_x86 =     " kernel-image"
+MACHINE_ESSENTIAL_EXTRA_RDEPENDS:append:sample-image_x86-64 =  " kernel-image"
+MACHINE_ESSENTIAL_EXTRA_RDEPENDS:append:sample-image_arm =     " kernel-image kernel-devicetree"
+MACHINE_ESSENTIAL_EXTRA_RDEPENDS:append:sample-image_aarch64 = " kernel-image kernel-devicetree"
 
 python() {
     features = d.getVar('DISTRO_FEATURES').split()
@@ -26,7 +26,7 @@ SAMPLE_BOOT_PART_MOUNT_LOCATION_sample-grub_sample-bios = "/boot/grub"
 EFI_PREFIX_sample-image = "${SAMPLE_BOOT_PART_MOUNT_LOCATION}"
 
 # Update fstab for Sample
-ROOTFS_POSTPROCESS_COMMAND_append = " sample_update_fstab_file;"
+ROOTFS_POSTPROCESS_COMMAND:append = " sample_update_fstab_file;"
 sample_update_fstab_file() {
     local tmpBootPart="${SAMPLE_BOOT_PART}"
     local tmpDataPart="${SAMPLE_DATA_PART}"
@@ -84,14 +84,14 @@ def sample_default_state_scripts_version(d):
 
 # Setup state script version file.
 SAMPLE_STATE_SCRIPTS_VERSION = "${@sample_default_state_scripts_version(d)}"
-ROOTFS_POSTPROCESS_COMMAND_append = "${@bb.utils.contains('DISTRO_FEATURES', 'sample-image', ' sample_create_scripts_version_file;', '', d)}"
+ROOTFS_POSTPROCESS_COMMAND:append = "${@bb.utils.contains('DISTRO_FEATURES', 'sample-image', ' sample_create_scripts_version_file;', '', d)}"
 
 sample_create_scripts_version_file() {
     install -d -m 755 ${IMAGE_ROOTFS}${sysconfdir}/sample/scripts/
     echo -n "${SAMPLE_STATE_SCRIPTS_VERSION}" > ${IMAGE_ROOTFS}${sysconfdir}/sample/scripts/version
 }
 
-IMAGE_ROOTFS_EXCLUDE_PATH_append_sample-image = " data/ ${@d.getVar('SAMPLE_BOOT_PART_MOUNT_LOCATION')[1:]}/"
+IMAGE_ROOTFS_EXCLUDE_PATH:append:sample-image = " data/ ${@d.getVar('SAMPLE_BOOT_PART_MOUNT_LOCATION')[1:]}/"
 
 
 ################################################################################

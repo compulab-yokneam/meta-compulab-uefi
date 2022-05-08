@@ -117,4 +117,4 @@ IMAGE_CMD_sample () {
 
 IMAGE_CMD_sample[vardepsexclude] += "IMAGE_ID"
 # We need to have the filesystem image generated already.
-IMAGE_TYPEDEP_sample_append = " ${ARTIFACTIMG_FSTYPE}"
+IMAGE_TYPEDEP_sample:append = " ${ARTIFACTIMG_FSTYPE}"

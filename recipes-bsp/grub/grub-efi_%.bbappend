@@ -1,4 +1,4 @@
-pkg_postinst_ontarget_${PN}-env() {
+pkg_postinst_ontarget:${PN}-env() {
     CMD=/usr/bin/grub-editenv
     ENV=boot/EFI/BOOT/grubenv
     if [ -z $D ]; then
@@ -9,7 +9,7 @@ pkg_postinst_ontarget_${PN}-env() {
     fi
 }
 
-pkg_postinst_${PN}-env () {
+pkg_postinst:${PN}-env () {
     CMD=/usr/bin/grub-editenv
     ENV=boot/EFI/BOOT/grubenv
     if [ -z $D ]; then
@@ -21,8 +21,8 @@ pkg_postinst_${PN}-env () {
 }
 
 PACKAGES =+ "${PN}-env"
-RDEPENDS_${PN} += "${PN}-env"
-RDEPENDS_${PN}-env += "${PN}-editenv"
-ALLOW_EMPTY_${PN}-env = "1"
+RDEPENDS:${PN} += "${PN}-env"
+RDEPENDS:${PN}-env += "${PN}-editenv"
+ALLOW_EMPTY:${PN}-env = "1"
 
-GRUB_BUILDIN_append = " gzio "
+GRUB_BUILDIN:append = " gzio "

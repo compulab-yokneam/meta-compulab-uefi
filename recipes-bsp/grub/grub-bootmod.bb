@@ -24,4 +24,4 @@ do_install () {
 	fi
 }
 
-FILES_${PN} = "/boot/EFI/BOOT/arm64-efi"
+FILES:${PN} = "/boot/EFI/BOOT/arm64-efi"

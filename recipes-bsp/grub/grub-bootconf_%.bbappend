@@ -1,4 +1,4 @@
-FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}/:"
+FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}/:"
 
 build_efi_cfg[noexec] = "1"
 
@@ -36,7 +36,7 @@ grub_cfg_create() {
     printf "\n}\n"
 }
 
-do_install_prepend() {
+do_install:prepend() {
     export WD="${WORKDIR}/${SRC_SUB}"
     grub_cfg_create > ${GRUB_CONF}
 }
