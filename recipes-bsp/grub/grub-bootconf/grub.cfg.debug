@@ -1,7 +1,14 @@
-menuentry "Set Debug" --id="Debug" {
+if [ -z "${debug}" ]; then
+menuentry "Set debug" --id="Debug" {
 	debug="debug initcall_debug"
 	save_env debug
 }
+else
+menuentry "Unset debug" --id="Debug" {
+	unset debug
+	save_env debug
+}
+fi
 
 if [ -z "${fbcon}" ]; then
 menuentry "Set frame buffer rotation" --id="set_fbcon_rot" {
