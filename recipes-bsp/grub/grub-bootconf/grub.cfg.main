@@ -73,6 +73,7 @@ menuentry "Boot Linux" --id="Boot" {
     bootargs="root=PARTUUID=${PARTUUID} ${rootargs} console=${console}"
 
     echo "Booting ${fdtfile} config ..."
+    devicetree /boot/${fdtfile}
     linux /boot/${image} ${bootargs} ${debug} ${fbcon}
 }
 
@@ -82,5 +83,6 @@ menuentry "Install Linux" --id="Install" {
     search --no-floppy --fs-uuid --set=root ${UUID}
     bootargs="root=PARTUUID=${PARTUUID} ${rootargs} console=${console}"
 
+    devicetree /boot/${fdtfile}
     linux /boot/${image} ${bootargs} ${debug} ${init}
 }
