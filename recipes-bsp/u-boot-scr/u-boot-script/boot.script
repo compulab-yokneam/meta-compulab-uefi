@@ -1,5 +1,5 @@
 #
-setenv grub_efi 'EFI/BOOT/grub-efi-bootaa64.efi'
+setenv grub_efi 'EFI/BOOT/bootaa64.efi'
 setenv boot_efi 'bootefi ${loadaddr} ${fdtcontroladdr}'
 
 # efi
