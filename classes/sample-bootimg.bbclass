@@ -3,7 +3,7 @@
 
 inherit sample-helpers
 
-IMAGE_CMD_bootimg() {
+IMAGE_CMD:bootimg() {
     if [ ${SAMPLE_BOOT_PART_SIZE_MB} -ne 0 ]; then
         sample_merge_bootfs_and_image_boot_files
         rm -f "${WORKDIR}/boot.vfat"

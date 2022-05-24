@@ -20,11 +20,6 @@ _IMAGE_CMD_dataimg() {
     install -m 0644 "${WORKDIR}/data.${SAMPLE_DATA_PART_FSTYPE_TO_GEN}" "${IMGDEPLOYDIR}/${IMAGE_NAME}.dataimg"
 }
 
-IMAGE_CMD_dataimg_sample-image-ubi() {
-    mkfs.ubifs -o "${WORKDIR}/data.ubifs" -r "${IMAGE_ROOTFS}/data" ${MKUBIFS_ARGS}
-    install -m 0644 "${WORKDIR}/data.ubifs" "${IMGDEPLOYDIR}/${IMAGE_NAME}.dataimg"
-}
-
 IMAGE_CMD:dataimg() {
     if [ "${SAMPLE_DATA_PART_SIZE_MB}" -ne "0" ]; then
         _IMAGE_CMD_dataimg

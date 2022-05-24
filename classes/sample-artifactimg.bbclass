@@ -40,7 +40,7 @@ apply_arguments () {
     cmd=$res
 }
 
-IMAGE_CMD_sample () {
+IMAGE_CMD:sample () {
     set -x
 
     if [ -z "${SAMPLE_ARTIFACT_NAME}" ]; then
@@ -115,6 +115,6 @@ IMAGE_CMD_sample () {
         -o ${IMGDEPLOYDIR}/${IMAGE_NAME}${IMAGE_NAME_SUFFIX}.sample
 }
 
-IMAGE_CMD_sample[vardepsexclude] += "IMAGE_ID"
+IMAGE_CMD:sample[vardepsexclude] += "IMAGE_ID"
 # We need to have the filesystem image generated already.
-IMAGE_TYPEDEP_sample:append = " ${ARTIFACTIMG_FSTYPE}"
+IMAGE_TYPEDEP:sample:append = " ${ARTIFACTIMG_FSTYPE}"
