@@ -270,8 +270,8 @@ _SAMPLE_PART_IMAGE_DEPENDS += "${@bb.utils.contains('SAMPLE_DATA_PART_FSTYPE', '
 #
 # This assumes that U-boot is used on ARM, this could become problematic
 # if we add support for other bootloaders on ARM, e.g Barebox.
-_SAMPLE_PART_IMAGE_DEPENDS:append:sample-grub_arm =     " u-boot:do_deploy"
-_SAMPLE_PART_IMAGE_DEPENDS:append:sample-grub_aarch64 = " u-boot:do_deploy"
+_SAMPLE_PART_IMAGE_DEPENDS:append:sample-grub:arm =     " u-boot:do_deploy"
+_SAMPLE_PART_IMAGE_DEPENDS:append:sample-grub:aarch64 = " u-boot:do_deploy"
 
 _SAMPLE_PART_IMAGE_DEPENDS:append:sample-uboot = " u-boot:do_deploy"
 _SAMPLE_PART_IMAGE_DEPENDS:append:sample-grub_sample-bios = " grub:do_deploy"

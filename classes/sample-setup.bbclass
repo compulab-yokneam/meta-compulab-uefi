@@ -96,7 +96,7 @@ SAMPLE_DEVICE_TYPE ??= "${SAMPLE_DEVICE_TYPE_DEFAULT}"
 SAMPLE_DEVICE_TYPE_DEFAULT = "${MACHINE}"
 
 # To tell the difference from a beaglebone-yocto image with only U-Boot.
-SAMPLE_DEVICE_TYPE_DEFAULT_beaglebone-yocto_sample-grub = "${MACHINE}-grub"
+SAMPLE_DEVICE_TYPE_DEFAULT:beaglebone-yocto_sample-grub = "${MACHINE}-grub"
 
 # Space separated list of device types compatible with the built update.
 SAMPLE_DEVICE_TYPES_COMPATIBLE ??= "${SAMPLE_DEVICE_TYPES_COMPATIBLE_DEFAULT}"

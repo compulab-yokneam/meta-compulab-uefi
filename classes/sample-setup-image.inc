@@ -5,10 +5,10 @@ IMAGE_FSTYPES += "${@bb.utils.contains('DISTRO_FEATURES', 'sample-image-uefi', '
 IMAGE_FSTYPES += "${@bb.utils.contains('DISTRO_FEATURES', 'sample-image-bios', ' biosimg biosimg.bmap', '', d)}"
 IMAGE_FSTYPES += "${@bb.utils.contains('DISTRO_FEATURES', 'sample-image-gpt', ' gptimg gptimg.bmap', '', d)}"
 
-MACHINE_ESSENTIAL_EXTRA_RDEPENDS:append:sample-image_x86 =     " kernel-image"
-MACHINE_ESSENTIAL_EXTRA_RDEPENDS:append:sample-image_x86-64 =  " kernel-image"
-MACHINE_ESSENTIAL_EXTRA_RDEPENDS:append:sample-image_arm =     " kernel-image kernel-devicetree"
-MACHINE_ESSENTIAL_EXTRA_RDEPENDS:append:sample-image_aarch64 = " kernel-image kernel-devicetree"
+MACHINE_ESSENTIAL_EXTRA_RDEPENDS:append:sample-image:x86 =     " kernel-image"
+MACHINE_ESSENTIAL_EXTRA_RDEPENDS:append:sample-image:x86-64 =  " kernel-image"
+MACHINE_ESSENTIAL_EXTRA_RDEPENDS:append:sample-image:arm =     " kernel-image kernel-devicetree"
+MACHINE_ESSENTIAL_EXTRA_RDEPENDS:append:sample-image:aarch64 = " kernel-image kernel-devicetree"
 
 python() {
     features = d.getVar('DISTRO_FEATURES').split()
@@ -76,7 +76,7 @@ sample_update_fstab_file() {
 }
 
 def sample_default_state_scripts_version(d):
-    pref_sample = d.getVar('PREFERRED_VERSION_pn-sample-client')
+    pref_sample = d.getVar('PREFERRED_VERSION:pn-sample-client')
     if pref_sample and pref_sample.startswith("1."):
         return "2"
     else:
