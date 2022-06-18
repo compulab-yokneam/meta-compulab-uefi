@@ -1,0 +1,5 @@
+part u-boot --source rawcopy --sourceparams="file=imx-boot" --ondisk mmcblk --no-table --align ${IMX_BOOT_SEEK}
+part /boot --source bootimg-efi --sourceparams="loader=grub-efi" --ondisk mmcblk --label boot --active --align 8192 --uuid ${PARTUUID_BOOT}
+part / --source rootfs --ondisk mmcblk --fstype=ext4 --label root --align 8192 --uuid ${PARTUUID} --fsuuid ${UUID}
+
+bootloader --ptable gpt --configfile="efi-bootloader-config.cfg"
