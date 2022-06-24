@@ -1,9 +1,6 @@
 # meta-compulab-uefi
 
-This layer adds an option to boot the CompuLab i.MX8 boards using bootefi + grub.
-
-# Prerequisites
-* The https://github.com/compulab-yokneam/meta-bsp-imx8mm/tree/rel_imx_5.4.24_2.1.0-dev[meta-bsp-imx8mm] meta-layer must be deployed first.
+This layer adds an option to boot the CompuLab i.MX8MM/P boards using bootefi + grub.
 
 # How to use
 
@@ -16,15 +13,3 @@ git clone https://github.com/compulab-yokneam/meta-compulab-uefi.git ${BUILDDIR}
 cat << EOF >> ${BUILDDIR}/conf/bblayers.conf
 BBLAYERS += " \${BSPDIR}/sources/meta-compulab-uefi "
 EOF
-
-* Issue a supported image build:
-|===
-|build line|result
-
-|```bitbake -k core-image-full-cmdline```
-|${BUILDDIR}/tmp/deploy/images/${MACHINE}/core-image-full-cmdline-mcm-imx8m-mini.uefiimg
-
-|```bitbake -k fsl-image-qt5-validation-imx```
-|${BUILDDIR}/tmp/deploy/images/${MACHINE}/fsl-image-qt5-validation-imx-mcm-imx8m-mini.uefiimg
-
-|===
