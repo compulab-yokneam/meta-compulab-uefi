@@ -64,25 +64,36 @@ fi
 
 UUID=%%UUID%%
 PARTUUID=%%PARTUUID%%
-bootargs="root=PARTUUID=${PARTUUID} ${rootargs} console=${console}"
+bootargs="root=PARTUUID=${PARTUUID} ${rootargs} console=${console} net.ifnames=0"
+search --no-floppy --fs-uuid --set=root ${UUID}
+
+function main_boot {
+    load_env
+    echo "dtree (${root})/boot/${fdtfile} ..."
+    devicetree (${root})/boot/${fdtfile}
+    echo "linux (${root})/boot/${image} ${bootargs} ${debug} ${fbcon} ..."
+    linux (${root})/boot/${image} ${bootargs} ${debug} ${fbcon}
+}
+
+function show_boot {
+    load_env
+    echo "dtree    : (${root})/boot/${fdtfile}"
+    echo "linux    : (${root})/boot/${image}"
+    echo "bootargs : ${bootargs} ${debug} ${fbcon}"
+    sleep --verbose --interruptible 60
+}
 
 menuentry "Boot Linux" --id="Boot" {
-    load_env
+    bootargs="${bootargs}"
+    main_boot
+}
 
-    search --no-floppy --fs-uuid --set=root ${UUID}
-    bootargs="root=PARTUUID=${PARTUUID} ${rootargs} console=${console}"
-
-    echo "Booting ${fdtfile} config ..."
-    devicetree /boot/${fdtfile}
-    linux /boot/${image} ${bootargs} ${debug} ${fbcon}
+menuentry "Show Linux" --id="Show" {
+    bootargs="${bootargs}"
+    show_boot
 }
 
 menuentry "Install Linux" --id="Install" {
-    load_env
-
-    search --no-floppy --fs-uuid --set=root ${UUID}
-    bootargs="root=PARTUUID=${PARTUUID} ${rootargs} console=${console}"
-
-    devicetree /boot/${fdtfile}
-    linux /boot/${image} ${bootargs} ${debug} ${init}
+    bootargs="${bootargs} ${init}"
+    main_boot
 }

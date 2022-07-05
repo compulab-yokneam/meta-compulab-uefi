@@ -1,23 +1,23 @@
 if [ -z "${debug}" ]; then
 menuentry "Set debug" --id="Debug" {
-	debug="debug initcall_debug"
+	set debug="debug initcall_debug"
 	save_env debug
 }
 else
 menuentry "Unset debug" --id="Debug" {
-	unset debug
+	set debug=""
 	save_env debug
 }
 fi
 
 if [ -z "${fbcon}" ]; then
 menuentry "Set frame buffer rotation" --id="set_fbcon_rot" {
-	fbcon="fbcon=rotate:1"
+	set fbcon="fbcon=rotate:1"
 	save_env fbcon
 }
 else
 menuentry "Reset frame buffer rotation" --id="reset_fbcon_rot" {
-	unset fbcon
+	set fbcon=""
 	save_env fbcon
 }
 fi

@@ -1,7 +1,6 @@
 for dtb in DEVICE_TREE_LIST;do
 menuentry "Set ${dtb}" --id="${dtb}" ${dtb} {
-	fdtfile=${2}
+	set fdtfile=${2}
 	save_env fdtfile
-	echo "The ${fdtfile} config is applied."
 }
 done
