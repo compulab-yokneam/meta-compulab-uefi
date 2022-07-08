@@ -13,11 +13,11 @@ load_env
 default_rootdev="GRUB_ROOT_DEVICE"
 default_image="Image"
 default_console="console=console,speed"
-default_rootargs="ro rootwait"
+default_rootargs="rootwait"
 default_init="init=/usr/local/bin/cl-init"
 
 # Grub
-default_boot="Boot"
+default_boot="boot_rw"
 default_part=2
 default_fdt="GRUB_BOOT_DEVICETREE"
 timeout=10
@@ -68,6 +68,8 @@ bootargs="root=PARTUUID=${PARTUUID} ${rootargs} console=${console} net.ifnames=0
 search --no-floppy --fs-uuid --set=root ${UUID}
 
 function main_boot {
+    set default=${1}
+    save_env default
     load_env
     echo "dtree (${root})/boot/${fdtfile} ..."
     devicetree (${root})/boot/${fdtfile}
@@ -83,17 +85,22 @@ function show_boot {
     sleep --verbose --interruptible 60
 }
 
-menuentry "Boot Linux" --id="Boot" {
-    bootargs="${bootargs}"
-    main_boot
+menuentry "Boot Linux RW" --id="boot_rw" {
+    bootargs="${bootargs} rw"
+    main_boot boot_rw
 }
 
-menuentry "Show Linux" --id="Show" {
+menuentry "Boot Linux RO" --id="boot_ro" {
+    bootargs="${bootargs} ro"
+    main_boot boot_ro
+}
+
+menuentry "Show Linux" --id="show" {
     bootargs="${bootargs}"
     show_boot
 }
 
-menuentry "Install Linux" --id="Install" {
+menuentry "Install Linux" --id="install" {
     bootargs="${bootargs} ${init}"
-    main_boot
+    main_boot install
 }
