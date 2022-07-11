@@ -13,11 +13,11 @@ load_env
 default_rootdev="GRUB_ROOT_DEVICE"
 default_image="Image"
 default_console="console=console,speed"
-default_rootargs="rootwait"
+default_rootargs="ro rootwait"
 default_init="init=/usr/local/bin/cl-init"
 
 # Grub
-default_boot="boot_rw"
+default_boot="boot"
 default_part=2
 default_fdt="GRUB_BOOT_DEVICETREE"
 timeout=10
@@ -85,14 +85,9 @@ function show_boot {
     sleep --verbose --interruptible 60
 }
 
-menuentry "Boot Linux RW" --id="boot_rw" {
-    bootargs="${bootargs} rw"
+menuentry "Boot Linux" --id="boot" {
+    bootargs="${bootargs}"
     main_boot boot_rw
-}
-
-menuentry "Boot Linux RO" --id="boot_ro" {
-    bootargs="${bootargs} ro"
-    main_boot boot_ro
 }
 
 menuentry "Show Linux" --id="show" {
