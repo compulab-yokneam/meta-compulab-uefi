@@ -1,7 +1,11 @@
 GRUB_IMAGE_DEFAULT = "bootaa64.efi"
+EFIDIR = "/EFI/BOOT"
 
-GRUB_BUILDIN += "boot linux ext2 fat serial part_msdos part_gpt normal \
-                 efi_gop iso9660 configfile search loadenv test reboot progress help lsefi echo loadenv fdt sleep"
+GRUB_BUILDIN += "all_video boot btrfs cat chain configfile echo efifwsetup efi_gop \
+		exfat ext2 fat fdt gcry_sha256 gfxterm gfxterm_background gfxterm_menu \
+		gzio halt hashsum help hfsplus iso9660 linux loadenv loopback ls lsefi \
+		normal ntfs part_gpt part_msdos progress reboot regexp search \
+		search_fs_file search_fs_uuid search_label serial sleep test udf"
 
 do_install:append() {
     rm -rf ${D}${EFI_FILES_PATH}/${GRUB_IMAGE}
