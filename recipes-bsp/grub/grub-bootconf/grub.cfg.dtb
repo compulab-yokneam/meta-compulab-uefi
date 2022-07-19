@@ -1,6 +1,7 @@
-for dtb in DEVICE_TREE_LIST;do
-menuentry "Set ${dtb}" --id="${dtb}" ${dtb} {
-	set fdtfile=${2}
-	save_env fdtfile
-}
+for dtb_file in ($root)/boot/*.dtb;do
+	regexp --set=dtb '^\([^)]*\)/boot/(.*)$' ${dtb_file}
+	menuentry "Set ${dtb}" --id="${dtb}" ${dtb} {
+		set fdtfile=${2}
+		save_env fdtfile
+	}
 done
