@@ -7,10 +7,10 @@ insmod echo
 insmod loadenv
 insmod fdt
 insmod sleep
+insmod regexp
 load_env
 
 # Linux
-default_rootdev="GRUB_ROOT_DEVICE"
 default_image="Image"
 default_console="console=console,speed"
 default_rootargs="ro rootwait"
@@ -18,14 +18,8 @@ default_init="init=/usr/local/bin/cl-init"
 
 # Grub
 default_boot="boot"
-default_part=2
 default_fdt="GRUB_BOOT_DEVICETREE"
-timeout=10
-
-if [ -z "${rootdev}" ]; then
-    rootdev=${default_rootdev}
-    save_env rootdev
-fi
+timeout=5
 
 if [ -z "${rootargs}" ]; then
     rootargs="${default_rootargs}"
@@ -47,11 +41,6 @@ if [ -z "${default}" ]; then
     save_env default
 fi
 
-if [ -z "${part}" ]; then
-    part=${default_part}
-    save_env part
-fi
-
 if [ -z "${fdtfile}" ]; then
     fdtfile=${default_fdt}
     save_env fdtfile
@@ -69,33 +58,47 @@ search --no-floppy --fs-uuid --set=root ${UUID}
 
 function main_boot {
     set default=${1}
+    set initrd=${2}
     save_env default
     load_env
     echo "dtree (${root})/boot/${fdtfile} ..."
     devicetree (${root})/boot/${fdtfile}
     echo "linux (${root})/boot/${image} ${bootargs} ${debug} ${fbcon} ..."
     linux (${root})/boot/${image} ${bootargs} ${debug} ${fbcon}
+    if [ -n "${initrd}" ]; then
+        echo "initrd (${root})/boot/${initrd} ..."
+        initrd (${root})/boot/${initrd}
+    fi
 }
 
-function show_boot {
-    load_env
-    echo "dtree    : (${root})/boot/${fdtfile}"
-    echo "linux    : (${root})/boot/${image}"
-    echo "bootargs : ${bootargs} ${debug} ${fbcon}"
-    sleep --verbose --interruptible 60
-}
+for kernel_file in ($root)/boot/Image*;do
+	regexp --set=kernel '^\([^)]*\)/boot/(.*)$' ${kernel_file}
+	menuentry "Boot Linux ${kernel}" --id="${kernel}" ${kernel} {
+		bootargs="${bootargs}"
+		set image=${2}
+		save_env image
+		main_boot ${kernel}
+	}
+done
 
-menuentry "Boot Linux" --id="boot" {
-    bootargs="${bootargs}"
-    main_boot boot_rw
-}
-
-menuentry "Show Linux" --id="show" {
-    bootargs="${bootargs}"
-    show_boot
-}
+for kernel_file in ($root)/boot/vmlinuz*;do
+	if [ -e $kernel_file ];then
+		regexp --set=version '/boot/vmlinuz-(.*)$' ${kernel_file}
+		initrd_file=/boot/initrd*${version}
+		if [ -e ${initrd_file} ];then
+			regexp --set=kernel '/boot/(.*)$' ${kernel_file}
+			regexp --set=initrd '/boot/(.*)$' ${initrd_file}
+			menuentry "Boot Linux ${kernel}" --id="${kernel}" ${kernel} {
+				bootargs="${bootargs}"
+				set image=${2}
+				save_env image
+				main_boot ${kernel} ${initrd}
+			}
+		fi
+	fi
+done
 
 menuentry "Install Linux" --id="install" {
     bootargs="${bootargs} ${init}"
-    main_boot install
+    main_boot boot
 }
