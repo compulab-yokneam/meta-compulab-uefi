@@ -11,15 +11,12 @@ GRUB_CONF = "grub-bootconf"
 grub_main() {
     local in=${WD}/grub.cfg.main
     local console=$(printf "${SERIAL_CONSOLES}" | awk -F";" '($0=$2","$1"n8")')
-    sed "s/\(default_console\)=.*\"$/\1=\"${console}\"/g;s|GRUB_ROOT_DEVICE|${GRUB_ROOT_DEVICE}|g;s|GRUB_BOOT_DEVICETREE|${GRUB_BOOT_DEVICETREE}|g;s|%%PARTUUID%%|${PARTUUID}|g;s|%%UUID%%|${UUID}|g" ${in}
+    sed "s/\(default_console\)=.*\"$/\1=\"${console}\"/g;s|GRUB_BOOT_DEVICETREE|${GRUB_BOOT_DEVICETREE}|g;s|%%PARTUUID%%|${PARTUUID}|g;s|%%UUID%%|${UUID}|g" ${in}
 }
 
 grub_dtb() {
     local in=${WD}/grub.cfg.dtb
-    for DTB in ${KERNEL_DEVICETREE};do
-        DEVICE_TREE_LIST=${DEVICE_TREE_LIST}" "$(basename ${DTB})
-    done
-    sed "s/DEVICE_TREE_LIST/${DEVICE_TREE_LIST}/g;s/\(^.*$\)/\t\1/g" ${in}
+    sed 's/\(^.*$\)/\t\1/' ${in}
     printf "\n"
 }
 
