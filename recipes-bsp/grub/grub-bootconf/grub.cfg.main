@@ -71,7 +71,7 @@ function main_boot {
     fi
 }
 
-for kernel_file in ($root)/boot/Image*;do
+for kernel_file in ($root)/boot/Image-*;do
 	regexp --set=kernel '/boot/(.*)$' ${kernel_file}
 	menuentry "Boot Linux ${kernel}" --id="${kernel}" ${kernel} {
 		bootargs="${bootargs}"
@@ -81,7 +81,7 @@ for kernel_file in ($root)/boot/Image*;do
 	}
 done
 
-for kernel_file in ($root)/boot/vmlinuz*;do
+for kernel_file in ($root)/boot/vmlinuz-*;do
 	if [ -e $kernel_file ];then
 		regexp --set=version '/boot/vmlinuz-(.*)$' ${kernel_file}
 		initrd_file=/boot/initrd*${version}
