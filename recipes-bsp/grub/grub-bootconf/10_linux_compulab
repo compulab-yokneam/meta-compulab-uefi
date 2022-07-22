@@ -1,0 +1,10 @@
+#!/bin/bash -e
+
+GRUB_CFG=/usr/share/compulab/grub-bootconf
+
+do_grub_cfg() {
+eval $(blkid $(findmnt / -o SOURCE -n) | awk -F":" '($0=$2)')
+sed "s/\(^UUID\)=.*/\1=${UUID}/g;s/\(^PARTUUID\).*$/\1=${PARTUUID}/g" ${GRUB_CFG}
+}
+
+[[ ! -f ${GRUB_CFG} ]] || do_grub_cfg

@@ -61,8 +61,8 @@ function main_boot {
     set initrd=${2}
     save_env default
     load_env
-    echo "dtree (${root})/boot/${fdtfile} ..."
-    devicetree (${root})/boot/${fdtfile}
+    # echo "dtree (${root})/boot/${fdtfile} ..."
+    # devicetree (${root})/boot/${fdtfile}
     echo "linux (${root})/boot/${image} ${bootargs} ${debug} ${fbcon} ..."
     linux (${root})/boot/${image} ${bootargs} ${debug} ${fbcon}
     if [ -n "${initrd}" ]; then

@@ -6,6 +6,7 @@ SRC_SUB = "grub-conf"
 SRC_URI += "file://grub.cfg.main;subdir=${SRC_SUB}"
 SRC_URI += "file://grub.cfg.dtb;subdir=${SRC_SUB}"
 SRC_URI += "file://grub.cfg.debug;subdir=${SRC_SUB}"
+SRC_URI += "file://10_linux_compulab"
 GRUB_CONF = "grub-bootconf"
 
 grub_main() {
@@ -28,7 +29,7 @@ grub_debug() {
 grub_cfg_create() {
     grub_main
     printf "\nsubmenu \"Advanced Boot Options\" --id=\"Advanced_boot_options\" {\n\tload_env\n"
-    grub_dtb
+    # grub_dtb
     grub_debug
     printf "\n}\n"
 }
@@ -37,3 +38,18 @@ do_install:prepend() {
     export WD="${WORKDIR}/${SRC_SUB}"
     grub_cfg_create > ${GRUB_CONF}
 }
+
+do_install:append() {
+	install -d ${D}${sysconfdir}/grub.d/
+	install -m 0755 ${WORKDIR}/10_linux_compulab ${D}${sysconfdir}/grub.d/
+
+	install -d ${D}${datadir}/compulab/
+	install -m 0664 ${GRUB_CONF} ${D}${datadir}/compulab/
+}
+
+FILES:${PN} += " \
+	${datadir}/* \
+	${sysconfdir}/* \
+"
+
+RDEPENDS:${PN} += " bash "
