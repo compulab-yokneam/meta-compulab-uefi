@@ -72,7 +72,7 @@ function main_boot {
 }
 
 for kernel_file in ($root)/boot/Image*;do
-	regexp --set=kernel '^\([^)]*\)/boot/(.*)$' ${kernel_file}
+	regexp --set=kernel '/boot/(.*)$' ${kernel_file}
 	menuentry "Boot Linux ${kernel}" --id="${kernel}" ${kernel} {
 		bootargs="${bootargs}"
 		set image=${2}
