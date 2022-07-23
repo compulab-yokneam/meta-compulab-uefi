@@ -26,11 +26,6 @@ if [ -z "${rootargs}" ]; then
     save_env rootargs
 fi
 
-if [ -z "${image}" ]; then
-    image=${default_image}
-    save_env image
-fi
-
 if [ -z "${console}" ]; then
     console=${default_console}
     save_env console
@@ -57,10 +52,10 @@ bootargs="root=PARTUUID=${PARTUUID} ${rootargs} console=${console} net.ifnames=0
 search --no-floppy --fs-uuid --set=root ${UUID}
 
 function main_boot {
-    set default=${1}
-    set initrd=${2}
+    default=${1}
+    image=${1}
+    initrd=${2}
     save_env default
-    load_env
     # echo "dtree (${root})/boot/${fdtfile} ..."
     # devicetree (${root})/boot/${fdtfile}
     echo "linux (${root})/boot/${image} ${bootargs} ${debug} ${fbcon} ..."
@@ -74,10 +69,7 @@ function main_boot {
 for kernel_file in ($root)/boot/Image-*;do
 	regexp --set=kernel '/boot/(.*)$' ${kernel_file}
 	menuentry "Boot Linux ${kernel}" --id="${kernel}" ${kernel} {
-		bootargs="${bootargs}"
-		set image=${2}
-		save_env image
-		main_boot ${kernel}
+		main_boot ${2}
 	}
 done
 
@@ -89,10 +81,7 @@ for kernel_file in ($root)/boot/vmlinuz-*;do
 			regexp --set=kernel '/boot/(.*)$' ${kernel_file}
 			regexp --set=initrd '/boot/(.*)$' ${initrd_file}
 			menuentry "Boot Linux ${kernel}" --id="${kernel}" ${kernel} {
-				bootargs="${bootargs}"
-				set image=${2}
-				save_env image
-				main_boot ${kernel} ${initrd}
+				main_boot ${2} ${initrd}
 			}
 		fi
 	fi
@@ -100,5 +89,5 @@ done
 
 menuentry "Install Linux" --id="install" {
     bootargs="${bootargs} ${init}"
-    main_boot boot
+    main_boot Image
 }
