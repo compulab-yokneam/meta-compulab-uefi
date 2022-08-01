@@ -56,7 +56,7 @@ function main_boot {
     image=${1}
     initrd=${2}
     save_env default
-    # echo "dtree (${root})/boot/${fdtfile} ..."
+    # echo "devicetree (${root})/boot/${fdtfile} ..."
     # devicetree (${root})/boot/${fdtfile}
     echo "linux (${root})/boot/${image} ${bootargs} ${debug} ${fbcon} ..."
     linux (${root})/boot/${image} ${bootargs} ${debug} ${fbcon}

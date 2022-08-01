@@ -3,5 +3,6 @@ for dtb_file in ($root)/boot/*.dtb;do
 	menuentry "Set ${dtb}" --id="${dtb}" ${dtb} {
 		set fdtfile=${2}
 		save_env fdtfile
+		devicetree (${root})/boot/${fdtfile}
 	}
 done

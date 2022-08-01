@@ -24,12 +24,13 @@ grub_dtb() {
 grub_debug() {
     local in=${WD}/grub.cfg.debug
     sed "s/\(^.*$\)/\t\1/g" ${in}
+    printf "\n"
 }
 
 grub_cfg_create() {
     grub_main
     printf "\nsubmenu \"Advanced Boot Options\" --id=\"Advanced_boot_options\" {\n\tload_env\n"
-    # grub_dtb
+    grub_dtb
     grub_debug
     printf "\n}\n"
 }
