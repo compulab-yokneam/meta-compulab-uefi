@@ -13,7 +13,8 @@ load_env
 # Linux
 default_image="Image"
 default_console="console=console,speed"
-default_rootargs="ro rootwait"
+default_rootargs="rootwait"
+default_rootmode="rw"
 default_init="init=/usr/local/bin/cl-init"
 
 # Grub
@@ -24,6 +25,11 @@ timeout=5
 if [ -z "${rootargs}" ]; then
     rootargs="${default_rootargs}"
     save_env rootargs
+fi
+
+if [ -z "${rootmode}" ]; then
+    rootmode="${default_rootmode}"
+    save_env rootmode
 fi
 
 if [ -z "${console}" ]; then
@@ -56,10 +62,11 @@ function main_boot {
     image=${1}
     initrd=${2}
     save_env default
+    load_env
     # echo "devicetree (${root})/boot/${fdtfile} ..."
     # devicetree (${root})/boot/${fdtfile}
-    echo "linux (${root})/boot/${image} ${bootargs} ${debug} ${fbcon} ..."
-    linux (${root})/boot/${image} ${bootargs} ${debug} ${fbcon}
+    echo "linux (${root})/boot/${image} ${bootargs} ${rootmode} ${debug} ${fbcon} ..."
+    linux (${root})/boot/${image} ${bootargs} ${rootmode} ${debug} ${fbcon}
     if [ -n "${initrd}" ]; then
         if [ -e /boot/${initrd} ];then
             echo "initrd (${root})/boot/${initrd} ..."
@@ -110,4 +117,19 @@ done
 menuentry "Install Linux" --id="install" {
     bootargs="${bootargs} ${init}"
     main_boot Image
+}
+
+submenu "Set rootmode" --id="set_rootmode" {
+	load_env
+	if [ "${rootmode}" = "rw" ]; then
+	menuentry "ReadOnly" --id="set_ro" {
+		rootmode="ro"
+		save_env rootmode
+	}
+	else
+	menuentry "ReadWrite" --id="set_rw" {
+		rootmode="rw"
+		save_env rootmode
+	}
+	fi
 }
