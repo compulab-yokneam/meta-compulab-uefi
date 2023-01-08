@@ -58,11 +58,12 @@ bootargs="root=PARTUUID=${PARTUUID} ${rootargs} console=${console} net.ifnames=0
 search --no-floppy --fs-uuid --set=root ${UUID}
 
 function main_boot {
-    default=${1}
     image=${1}
     initrd=${2}
+    default=${3}
+    rootmode=${4}
     save_env default
-    load_env
+    save_env rootmode
     # echo "devicetree (${root})/boot/${fdtfile} ..."
     # devicetree (${root})/boot/${fdtfile}
     echo "linux (${root})/boot/${image} ${bootargs} ${rootmode} ${debug} ${fbcon} ..."
@@ -75,29 +76,27 @@ function main_boot {
     fi
 }
 
-for kernel_file in ($root)/boot/Image-*;do
-    regexp --set=kernel '/boot/(.*)$' ${kernel_file}
-    menuentry "Boot Linux ${kernel}" --id="${kernel}" ${kernel} {
-        main_boot ${2} - ${kernel}
-    }
-done
-
-for kernel_file in ($root)/boot/Image-*;do
-    if [ -e $kernel_file ];then
-        regexp --set=version '/boot/Image-(.*)$' ${kernel_file}
-        initrd_file=/boot/initrd*${version}
-        if [ -e ${initrd_file} ];then
+for rootmode in rw ro;do
+    for kernel_file in ($root)/boot/Image-*;do
+        if [ -e $kernel_file ];then
+            regexp --set=version '/boot/Image-(.*)$' ${kernel_file}
             regexp --set=kernel '/boot/(.*)$' ${kernel_file}
-            regexp --set=initrd '/boot/(.*)$' ${initrd_file}
-            menuentry "Boot Linux ${kernel} with initrd" --id="${kernel}_initrd" ${kernel} {
-                main_boot ${2} ${initrd} ${kernel}_initrd
+            initrd_file=/boot/initrd*${version}
+            menuentry "Boot Linux ${kernel} ${rootmode}" --id="boot_${kernel}_${rootmode}" boot_${kernel}_${rootmode} ${rootmode} {
+                main_boot ${kernel} - ${2} ${3}
             }
-            menuentry "Boot Linux ${kernel} with initrd (recovery)" --id="${kernel}_initrd_recovery" ${kernel} {
-                bootargs="${bootargs} break"
-                main_boot ${2} ${initrd} ${kernel}_initrd_recovery
-            }
+            if [ -e ${initrd_file} ];then
+                regexp --set=initrd '/boot/(.*)$' ${initrd_file}
+                menuentry "Boot Linux ${kernel} ${rootmode} with initrd" --id="boot_initrd_${kernel}_${rootmode}" boot_initrd_${kernel}_${rootmode} ${rootmode} {
+                    main_boot ${kernel} ${initrd} ${2} ${3}
+                }
+                menuentry "Boot Linux ${kernel} ${rootmode} with initrd (recovery)" --id="boot_initrd_recovery_${kernel}_${rootmode}" boot_initrd_recovery_${kernel}_${rootmode} ${rootmode}  {
+                    bootargs="${bootargs} break"
+                    main_boot ${kernel} ${initrd} ${2} ${3}
+                }
+            fi
         fi
-    fi
+    done
 done
 
 for kernel_file in ($root)/boot/vmlinuz-*;do
@@ -107,8 +106,8 @@ for kernel_file in ($root)/boot/vmlinuz-*;do
         if [ -e ${initrd_file} ];then
             regexp --set=kernel '/boot/(.*)$' ${kernel_file}
             regexp --set=initrd '/boot/(.*)$' ${initrd_file}
-            menuentry "Boot Linux ${kernel}" --id="${kernel}" ${kernel} {
-                main_boot ${2} ${initrd} ${kernel}
+            menuentry "Boot Linux ${kernel}" --id="boot_vmlinuz_${kernel}" boot_vmlinuz_${kernel} {
+                main_boot ${kernel} ${initrd} ${2}
             }
         fi
     fi
