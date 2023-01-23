@@ -85,6 +85,13 @@ for rootmode in rw ro;do
             menuentry "Boot Linux ${kernel} ${rootmode}" --id="boot_${kernel}_${rootmode}" boot_${kernel}_${rootmode} ${rootmode} {
                 main_boot ${kernel} - ${2} ${3}
             }
+        if [ -z $install_entry_done ];then
+                menuentry "Install Linux ${kernel}" --id="install_${kernel}_${rootmode}" install_${kernel}_${rootmode} ${rootmode} {
+                bootargs="${bootargs} ${init}"
+                main_boot ${kernel} - ${2} ${3}
+            }
+	install_entry_done="yes"
+	fi
             if [ -e ${initrd_file} ];then
                 regexp --set=initrd '/boot/(.*)$' ${initrd_file}
                 menuentry "Boot Linux ${kernel} ${rootmode} with initrd" --id="boot_initrd_${kernel}_${rootmode}" boot_initrd_${kernel}_${rootmode} ${rootmode} {
@@ -112,11 +119,6 @@ for kernel_file in ($root)/boot/vmlinuz-*;do
         fi
     fi
 done
-
-menuentry "Install Linux" --id="install" {
-    bootargs="${bootargs} ${init}"
-    main_boot Image
-}
 
 submenu "Set rootmode" --id="set_rootmode" {
 	load_env
