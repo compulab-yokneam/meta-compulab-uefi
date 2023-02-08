@@ -15,6 +15,7 @@ default_image="Image"
 default_console="console=console,speed"
 default_rootargs="rootwait"
 default_rootmode="rw"
+default_rootmodes="ROOTMODES"
 default_init="init=/usr/local/bin/cl-init"
 
 # Grub
@@ -58,9 +59,9 @@ bootargs="root=PARTUUID=${PARTUUID} ${rootargs} console=${console} net.ifnames=0
 search --no-floppy --fs-uuid --set=root ${UUID}
 
 function main_boot {
-    image=${1}
-    initrd=${2}
-    default=${3}
+    default=${1}
+    image=${2}
+    initrd=${3}
     rootmode=${4}
     save_env default
     save_env rootmode
@@ -76,30 +77,30 @@ function main_boot {
     fi
 }
 
-for rootmode in rw ro;do
+for rootmode in ${default_rootmodes};do
     for kernel_file in ($root)/boot/Image-*;do
         if [ -e $kernel_file ];then
             regexp --set=version '/boot/Image-(.*)$' ${kernel_file}
             regexp --set=kernel '/boot/(.*)$' ${kernel_file}
             initrd_file=/boot/initrd*${version}
-            menuentry "Boot Linux ${kernel} ${rootmode}" --id="boot_${kernel}_${rootmode}" boot_${kernel}_${rootmode} ${rootmode} {
-                main_boot ${kernel} - ${2} ${3}
+            menuentry "Boot Linux ${kernel} ${rootmode}" --id="boot_${kernel}_${rootmode}" boot_${kernel}_${rootmode} ${kernel} - ${rootmode} {
+                main_boot ${2} ${3} ${4} ${5}
             }
             if [ -z $install_entry_done ];then
-                menuentry "Install DISTRO" --id="install_${kernel}_${rootmode}" install_${kernel}_${rootmode} ${rootmode} {
+                menuentry "Install DISTRO" --id="install_${kernel}_${rootmode}"  - ${kernel} - ${rootmode} {
                     bootargs="${bootargs} ${init}"
-                    main_boot ${kernel} - ${2} ${3}
+                    main_boot ${2} ${3} ${4} ${5}
                 }
                 install_entry_done="yes"
             fi
             if [ -e ${initrd_file} ];then
                 regexp --set=initrd '/boot/(.*)$' ${initrd_file}
-                menuentry "Boot Linux ${kernel} ${rootmode} with initrd" --id="boot_initrd_${kernel}_${rootmode}" boot_initrd_${kernel}_${rootmode} ${rootmode} {
-                    main_boot ${kernel} ${initrd} ${2} ${3}
+                menuentry "Boot Linux ${kernel} ${rootmode} with initrd" --id="boot_${kernel}_${initrd}_${rootmode}" boot_${kernel}_${initrd}_${rootmode} ${kernel} ${initrd} ${rootmode} {
+                    main_boot ${2} ${3} ${4} ${5}
                 }
-                menuentry "Boot Linux ${kernel} ${rootmode} with initrd (recovery)" --id="boot_initrd_recovery_${kernel}_${rootmode}" boot_initrd_recovery_${kernel}_${rootmode} ${rootmode}  {
+                menuentry "Boot Linux ${kernel} ${rootmode} with initrd (recovery)" boot_initrd_recovery_${kernel}_${rootmode} ${kernel} ${initrd} ${rootmode}  {
                     bootargs="${bootargs} break"
-                    main_boot ${kernel} ${initrd} ${2} ${3}
+                    main_boot ${2} ${3} ${4} ${5}
                 }
             fi
         fi
