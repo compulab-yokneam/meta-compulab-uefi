@@ -17,6 +17,7 @@ default_rootargs="rootwait"
 default_rootmode="rw"
 default_rootmodes="ROOTMODES"
 default_init="init=/usr/local/bin/cl-init"
+default_video_console="console=tty1"
 
 # Grub
 default_boot="boot"
@@ -31,6 +32,11 @@ fi
 if [ -z "${rootmode}" ]; then
     rootmode="${default_rootmode}"
     save_env rootmode
+fi
+
+if [ -z "${video_console}" ]; then
+    video_console=${default_video_console}
+    save_env video_console
 fi
 
 if [ -z "${console}" ]; then
@@ -55,7 +61,7 @@ fi
 
 UUID=%%UUID%%
 PARTUUID=%%PARTUUID%%
-bootargs="root=PARTUUID=${PARTUUID} ${rootargs} console=${console} net.ifnames=0"
+bootargs="root=PARTUUID=${PARTUUID} ${rootargs} console=${console} ${video_console} net.ifnames=0"
 search --no-floppy --fs-uuid --set=root ${UUID}
 
 function main_boot {
