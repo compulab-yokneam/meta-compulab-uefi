@@ -61,7 +61,7 @@ fi
 
 UUID=%%UUID%%
 PARTUUID=%%PARTUUID%%
-bootargs="root=PARTUUID=${PARTUUID} ${rootargs} console=${console} ${video_console} net.ifnames=0"
+bootargs="root=PARTUUID=${PARTUUID} ${rootargs} ${video_console} console=${console} net.ifnames=0"
 search --no-floppy --fs-uuid --set=root ${UUID}
 
 function main_boot {
