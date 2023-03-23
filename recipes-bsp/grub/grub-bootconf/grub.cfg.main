@@ -8,6 +8,8 @@ insmod loadenv
 insmod fdt
 insmod sleep
 insmod regexp
+insmod part_gpt
+insmod ext2
 load_env
 
 # Linux
@@ -89,16 +91,6 @@ for rootmode in ${default_rootmodes};do
             regexp --set=version '/boot/Image-(.*)$' ${kernel_file}
             regexp --set=kernel '/boot/(.*)$' ${kernel_file}
             initrd_file=/boot/initrd*${version}
-            menuentry "Boot Linux ${kernel}" --id="boot_${kernel}_${rootmode}" boot_${kernel}_${rootmode} ${kernel} - ${rootmode} {
-                main_boot ${2} ${3} ${4} ${5}
-            }
-            if [ -z $install_entry_done ];then
-                menuentry "Install DISTRO" --id="install_${kernel}_${rootmode}"  - ${kernel} - ${rootmode} {
-                    bootargs="${bootargs} ${init}"
-                    main_boot ${2} ${3} ${4} ${5}
-                }
-                install_entry_done="yes"
-            fi
             if [ -e ${initrd_file} ];then
                 regexp --set=initrd '/boot/(.*)$' ${initrd_file}
                 menuentry "Boot Linux ${kernel} with initrd" --id="boot_${kernel}_${initrd}_${rootmode}" boot_${kernel}_${initrd}_${rootmode} ${kernel} ${initrd} ${rootmode} {
@@ -108,6 +100,19 @@ for rootmode in ${default_rootmodes};do
                     bootargs="${bootargs} break"
                     main_boot ${2} ${3} ${4} ${5}
                 }
+                boot_entry_done=yes
+            fi
+            if [ -z $boot_entry_done ];then
+                menuentry "Boot Linux ${kernel}" --id="boot_${kernel}_${rootmode}" boot_${kernel}_${rootmode} ${kernel} - ${rootmode} {
+                    main_boot ${2} ${3} ${4} ${5}
+                }
+            fi
+            if [ -z $install_entry_done ];then
+                menuentry "Install DISTRO" --id="install_${kernel}_${rootmode}"  - ${kernel} - ${rootmode} {
+                    bootargs="${bootargs} ${init}"
+                    main_boot ${2} ${3} ${4} ${5}
+                }
+                install_entry_done="yes"
             fi
         fi
     done
@@ -120,8 +125,8 @@ for kernel_file in ($root)/boot/vmlinuz-*;do
         if [ -e ${initrd_file} ];then
             regexp --set=kernel '/boot/(.*)$' ${kernel_file}
             regexp --set=initrd '/boot/(.*)$' ${initrd_file}
-            menuentry "Boot Linux ${kernel}" --id="boot_vmlinuz_${kernel}" boot_vmlinuz_${kernel} {
-                main_boot ${kernel} ${initrd} ${2}
+            menuentry "Boot Linux ${kernel}" --id="boot_vmlinuz_${kernel}" boot_vmlinuz_${kernel} ${kernel} ${initrd} ${rootmode} {
+                main_boot ${2} ${3} ${4} ${5}
             }
         fi
     fi
