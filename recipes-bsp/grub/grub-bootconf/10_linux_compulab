@@ -1,10 +1,20 @@
 #!/bin/bash -e
 
-GRUB_CFG=/usr/share/compulab/grub-bootconf
+mode=$([[ -f /etc/debian_version ]]  &&  printf "debian" || printf "yocto" )
+GRUB_CFG=/usr/share/compulab/grub-bootconf-${mode}
 
-do_grub_cfg() {
+do_grub_cfg_debian() {
+ROOT_UUID=$(grub-probe --device ${GRUB_DEVICE} --target=fs_uuid)
+sed "s/ROOT_UUID/$ROOT_UUID/g" ${GRUB_CFG}
+}
+
+do_grub_cfg_yocto() {
 DISTRO=$(sed 's/\\.*$//g' /etc/issue)
+command -v ischroot && rc=$? || rc=$?
+
+if [[ ${rc} -eq 0 ]];then
 ischroot && rc=$? || rc=$?
+fi
 
 if [[ ${rc} -eq 0 ]];then
 	sed "s|DISTRO|${DISTRO}|g" ${GRUB_CFG}
@@ -14,4 +24,4 @@ else
 fi
 }
 
-[[ ! -f ${GRUB_CFG} ]] || do_grub_cfg
+[[ ! -f ${GRUB_CFG} ]] || do_grub_cfg_${mode}
