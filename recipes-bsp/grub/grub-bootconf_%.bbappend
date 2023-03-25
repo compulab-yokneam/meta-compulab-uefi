@@ -8,6 +8,7 @@ SRC_URI += "file://grub.cfg.dtb;subdir=${SRC_SUB}"
 SRC_URI += "file://grub.cfg.debug;subdir=${SRC_SUB}"
 SRC_URI += "file://08_linux_compulab"
 SRC_URI += "file://10_linux_compulab"
+SRC_URI += "file://cl-grub-install"
 GRUB_CONF_DEBIAN = "grub-bootconf-debian"
 GRUB_CONF = "grub-bootconf"
 GRUB_DEFA = "grub-default"
@@ -72,12 +73,17 @@ do_install:append() {
 	install -m 0664 ${GRUB_CONF} ${D}${datadir}/compulab/${GRUB_CONF}-yocto
 	install -m 0664 ${GRUB_DEFA} ${D}${datadir}/compulab/
 	install -m 0664 ${GRUB_CONF_DEBIAN} ${D}${datadir}/compulab/
-
+	install -d ${D}${prefix}/local/bin
+	install -m 0755 ${S}/cl-grub-install ${D}${prefix}/local/bin/
 }
 
-FILES:${PN} += " \
+PACKAGES:append = " ${PN}-compulab "
+
+FILES:${PN}-compulab += " \
 	${datadir}/* \
 	${sysconfdir}/* \
+	${prefix}/local/bin/* \
 "
 
-RDEPENDS:${PN} += " bash "
+RDEPENDS:${PN}-compulab += " bash "
+RDEPENDS:${PN} += " ${PN}-compulab "
