@@ -10,6 +10,8 @@ SRC_URI += "file://08_linux_compulab"
 SRC_URI += "file://10_linux_compulab"
 SRC_URI += "file://cl-grub-install"
 SRC_URI += "file://cl-grub-mkimage"
+SRC_URI += "file://grub.in"
+
 GRUB_CONF_DEBIAN = "grub-bootconf-debian"
 GRUB_CONF = "grub-bootconf"
 GRUB_DEFA = "grub-default"
@@ -49,12 +51,11 @@ grub_dtb_create() {
 }
 
 grub_def_create() {
-printf "GRUB_CMDLINE_LINUX_DEFAULT=\"console=tty1 "
-for _c in "${SERIAL_CONSOLES}";do
-    printf "$_c" | awk -F";" '$0="console="$2","$1"n8 "' ORS=" "
+local _C=""
+for serial in $(echo -n "${SERIAL_CONSOLES}" | sed 's/;/-/g'); do
+    _C=$_C" "$(printf ${serial} | awk -F"-" '{ print "console="$2","$1"n8" }')
 done
-printf "compulab=yes\"\n"
-printf "GRUB_TERMINAL=console\n"
+sed "s/CONSOLE/${_C}/g" grub.in
 }
 
 do_install:prepend() {
