@@ -18,7 +18,7 @@ GRUB_DEFA = "grub-default"
 
 grub_main() {
     local in=${WD}/grub.cfg.main
-    local console=$(printf "${SERIAL_CONSOLES}" | awk -F";" '($0=$2","$1"n8")')
+    local console="$(printf "${SERIAL_CONSOLES}" | awk -F";" '($0=$2","$1"n8")')"
     sed "s/\(default_console\)=.*\"$/\1=\"${console}\"/g;s|GRUB_BOOT_DEVICETREE|${GRUB_BOOT_DEVICETREE}|g;s|%%PARTUUID%%|${PARTUUID}|g;s|%%UUID%%|${UUID}|g;s|ROOTMODES|${ROOTMODES}|g;" ${in}
 }
 
