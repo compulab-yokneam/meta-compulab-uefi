@@ -1,0 +1,61 @@
+#!/bin/bash -x
+
+mount_point=${mount_point:-"/"}
+
+function cl_grub_mkimage() {
+
+local grub_pref="/boot/grub"
+local grub_path="${grub_pref}"
+local mkimage_cfg=$(mktemp --dry-run --suffix=".cfg")
+
+cat << eof | tee ${mkimage_cfg}
+set root=(hd0,gpt2)
+set prefix=(\$root)${grub_pref}
+eof
+
+mkdir -p ${mount_point}/${grub_path}
+
+declare -A efi_info=(['armhf']='arm-efi bootarm.efi' ['arm64']='arm64-efi bootaa64.efi')
+local efi_arch=$(dpkg --print-architecture)
+local efi_data=(${efi_info[${efi_arch}]})
+
+mkdir -p ${mount_point}/boot/efi/efi/boot
+
+grub-mkimage \
+    -d ${mount_point}/usr/lib/grub/${efi_data[0]} \
+    -o ${mount_point}/boot/efi/efi/boot/${efi_data[1]} \
+    -c ${mkimage_cfg} \
+    -p ${grub_pref} \
+    -O ${efi_data[0]} \
+    fat iso9660 part_gpt part_msdos normal boot linux configfile loopback chain efifwsetup efi_gop \
+    ls search search_label search_fs_uuid search_fs_file gfxterm gfxterm_background  gfxterm_menu test \
+    all_video loadenv exfat ext2 ntfs btrfs hfsplus udf echo reboot serial cat gcry_sha256 halt hashsum \
+    sleep reboot regexp gzio 
+
+rm -rf ${mkimage_cfg}
+
+# Copy the grub modules
+# cp -a ${mount_point}/usr/lib/grub/${efi_data[0]} ${mount_point}/${grub_path}/
+
+# Create a grub environment variable file
+# grub-editenv ${mount_point}/${grub_path}/grubenv create
+
+# Create a grub conf file
+grub-mkconfig --output=${mount_point}/${grub_path}/grub.cfg
+
+}
+
+function cl_grub_mkimage_init() {
+    boot_dev=$(findmnt ${mount_point} --noheading -o SOURCE)
+    [[ -n ${boot_dev:-""} ]] && boot_dev=${boot_dev:0:-1}1 || exit 0
+    mkdir -p ${mount_point}/boot/efi/
+    mount ${boot_dev} ${mount_point}/boot/efi/
+}
+
+function cl_grub_mkimage_fini() {
+    umount ${mount_point}/boot/efi
+}
+
+cl_grub_mkimage_init
+cl_grub_mkimage
+cl_grub_mkimage_fini

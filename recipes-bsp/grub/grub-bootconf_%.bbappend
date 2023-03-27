@@ -9,6 +9,7 @@ SRC_URI += "file://grub.cfg.debug;subdir=${SRC_SUB}"
 SRC_URI += "file://08_linux_compulab"
 SRC_URI += "file://10_linux_compulab"
 SRC_URI += "file://cl-grub-install"
+SRC_URI += "file://cl-grub-mkimage"
 GRUB_CONF_DEBIAN = "grub-bootconf-debian"
 GRUB_CONF = "grub-bootconf"
 GRUB_DEFA = "grub-default"
@@ -75,6 +76,7 @@ do_install:append() {
 	install -m 0664 ${GRUB_CONF_DEBIAN} ${D}${datadir}/compulab/
 	install -d ${D}${prefix}/local/bin
 	install -m 0755 ${S}/cl-grub-install ${D}${prefix}/local/bin/
+	install -m 0755 ${S}/cl-grub-mkimage ${D}${prefix}/local/bin/
 }
 
 PACKAGES:append = " ${PN}-compulab "
