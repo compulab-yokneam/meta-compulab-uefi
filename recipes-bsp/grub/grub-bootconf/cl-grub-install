@@ -3,7 +3,12 @@
 mount_point=${mount_point:-"/"}
 img_file=$(mktemp --dry-run)
 
+function cl_grub_install_fini() {
+    return
+}
+
 function cl_grub_install_init() {
+    findmnt ${mount_point}/boot/efi && return || true
     dd if=/dev/zero of=${img_file} bs=1M count=128
     export device=$(losetup --show --find --partscan ${img_file})
     parted -s ${device} mklabel msdos
@@ -12,17 +17,16 @@ function cl_grub_install_init() {
     mkfs.vfat -n UEFI ${device}p1
     mkdir ${mount_point}/boot/efi/
     mount ${device}p1 ${mount_point}/boot/efi/
+    function cl_grub_install_fini() {
+        umount ${mount_point}/boot/efi
+        losetup --detach ${device}
+        rm -rf ${img_file}
+    }
 }
 
 function cl_grub_install() {
     efi_arch=$(dpkg --print-architecture)
     grub-install --removable --target=${efi_arch}-efi --efi-directory=${mount_point}/boot/efi/ --boot-directory=${mount_point}/boot/
-}
-
-function cl_grub_install_fini() {
-    umount ${mount_point}/boot/efi
-    losetup --detach ${device}
-    rm -rf ${img_file}
 }
 
 cl_grub_install_init
