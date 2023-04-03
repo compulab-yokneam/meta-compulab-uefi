@@ -19,11 +19,13 @@ declare -A efi_info=(['armhf']='arm-efi bootarm.efi' ['arm64']='arm64-efi bootaa
 local efi_arch=$(dpkg --print-architecture)
 local efi_data=(${efi_info[${efi_arch}]})
 
-mkdir -p ${mount_point}/boot/efi/efi/boot
+local image_path=boot/efi/efi/boot
+
+mkdir -p ${mount_point}/${image_path}
 
 grub-mkimage \
     -d ${mount_point}/usr/lib/grub/${efi_data[0]} \
-    -o ${mount_point}/boot/efi/efi/boot/${efi_data[1]} \
+    -o ${mount_point}/${image_path}/${efi_data[1]} \
     -c ${mkimage_cfg} \
     -p ${grub_pref} \
     -O ${efi_data[0]} \
@@ -33,15 +35,6 @@ grub-mkimage \
     sleep reboot regexp gzio 
 
 rm -rf ${mkimage_cfg}
-
-# Copy the grub modules
-# cp -a ${mount_point}/usr/lib/grub/${efi_data[0]} ${mount_point}/${grub_path}/
-
-# Create a grub environment variable file
-# grub-editenv ${mount_point}/${grub_path}/grubenv create
-
-# Create a grub conf file
-grub-mkconfig --output=${mount_point}/${grub_path}/grub.cfg
 
 }
 
@@ -56,6 +49,6 @@ function cl_grub_mkimage_fini() {
     umount ${mount_point}/boot/efi
 }
 
-cl_grub_mkimage_init
+[[ -z ${CL_INIT:-""} ]] ||  cl_grub_mkimage_init
 cl_grub_mkimage
-cl_grub_mkimage_fini
+[[ -z ${CL_INIT:-""} ]] ||  cl_grub_mkimage_fini
