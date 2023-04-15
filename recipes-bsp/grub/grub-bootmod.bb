@@ -13,7 +13,7 @@ do_compile[noexec] = "1"
 
 do_install () {
 	ARCH_DIR="arm64-efi"
-	GRUB_MOD_DST_PATH="${D}/boot/EFI/BOOT/${ARCH_DIR}"
+	GRUB_MOD_DST_PATH="${D}/boot/grub/${ARCH_DIR}"
 	GRUB_MOD_SRC_PATH="${S}/../recipe-sysroot/usr/lib/grub/${ARCH_DIR}"
 
 	if [ -d ${GRUB_MOD_SRC_PATH} ];then
@@ -24,4 +24,4 @@ do_install () {
 	fi
 }
 
-FILES:${PN} = "/boot/EFI/BOOT/arm64-efi"
+FILES:${PN} = "/boot/grub/arm64-efi"
