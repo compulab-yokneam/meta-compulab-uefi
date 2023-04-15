@@ -1,6 +1,7 @@
 #!/bin/bash -e
 
 mode=$([[ -f /etc/debian_version ]]  &&  printf "debian" || printf "yocto" )
+mode=debian
 GRUB_CFG=/usr/share/compulab/grub-bootconf-${mode}
 
 do_grub_cfg_debian() {
