@@ -1,0 +1,3 @@
+search.fs_uuid %%UUID%% root
+set prefix=($root)/boot/grub
+configfile $prefix/grub.cfg
