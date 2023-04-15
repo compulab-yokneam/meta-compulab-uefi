@@ -22,7 +22,7 @@ FILES:${PN}:append = " \
 
 pkg_postinst_ontarget:${PN}-env() {
     CMD=/usr/bin/grub-editenv
-    ENV=boot/EFI/BOOT/grubenv
+    ENV=boot/grub/grubenv
     if [ -z $D ]; then
         D="/"
     fi
@@ -33,7 +33,7 @@ pkg_postinst_ontarget:${PN}-env() {
 
 pkg_postinst:${PN}-env () {
     CMD=/usr/bin/grub-editenv
-    ENV=boot/EFI/BOOT/grubenv
+    ENV=boot/grub/grubenv
     if [ -z $D ]; then
         D="/"
     fi
