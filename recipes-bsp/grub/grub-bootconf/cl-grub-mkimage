@@ -1,16 +1,19 @@
 #!/bin/bash -x
 
 mount_point=${mount_point:-"/"}
+root_dev=$(findmnt ${mount_point} --noheading -o SOURCE)
+root_uuid=$(grub-probe --target=fs_uuid --device ${root_dev})
 
 function cl_grub_mkimage() {
 
-local grub_pref="/boot/grub"
-local grub_path="${grub_pref}"
+local grub_pref="/efi/boot"
+local grub_path="/boot/grub"
 local mkimage_cfg=$(mktemp --dry-run --suffix=".cfg")
 
 cat << eof | tee ${mkimage_cfg}
-set root=(hd0,gpt2)
-set prefix=(\$root)${grub_pref}
+search.fs_uuid ${root_uuid} root
+set prefix=(\$root)${grub_path}
+configfile \$prefix/grub.cfg
 eof
 
 mkdir -p ${mount_point}/${grub_path}
@@ -19,14 +22,13 @@ declare -A efi_info=(['armhf']='arm-efi bootarm.efi' ['arm64']='arm64-efi bootaa
 local efi_arch=$(dpkg --print-architecture)
 local efi_data=(${efi_info[${efi_arch}]})
 
-local image_path=boot/efi/efi/boot
+local image_path=boot/efi/${grub_pref}
 
 mkdir -p ${mount_point}/${image_path}
 
 grub-mkimage \
     -d ${mount_point}/usr/lib/grub/${efi_data[0]} \
     -o ${mount_point}/${image_path}/${efi_data[1]} \
-    -c ${mkimage_cfg} \
     -p ${grub_pref} \
     -O ${efi_data[0]} \
     fat iso9660 part_gpt part_msdos normal boot linux configfile loopback chain efifwsetup efi_gop \
@@ -34,7 +36,7 @@ grub-mkimage \
     all_video loadenv exfat ext2 ntfs btrfs hfsplus udf echo reboot serial cat gcry_sha256 halt hashsum \
     sleep reboot regexp gzio 
 
-rm -rf ${mkimage_cfg}
+mv ${mkimage_cfg} ${mount_point}/${image_path}/grub.cfg
 
 }
 
