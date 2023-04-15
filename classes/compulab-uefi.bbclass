@@ -5,8 +5,10 @@ compulab_fstab_ro() {
 }
 
 compulab_grub_extra() {
-    if [ -f ${IMAGE_ROOTFS}/boot/EFI/BOOT/grub.cfg ]; then
-        eval $(awk -F"=" '(/PRETTY_NAME/)' ${IMAGE_ROOTFS}/usr/lib/os-release)
-        sed -i "s|DISTRO|${PRETTY_NAME}|g" ${IMAGE_ROOTFS}/boot/EFI/BOOT/grub.cfg
-    fi
+    eval $(awk -F"=" '(/PRETTY_NAME/)' ${IMAGE_ROOTFS}/usr/lib/os-release)
+    for grub_cfg in ${IMAGE_ROOTFS}/boot/EFI/BOOT/grub.cfg ${IMAGE_ROOTFS}/boot/grub/grub.cfg;do
+        if [ -f ${grub_cfg} ]; then
+            sed -i "s|DISTRO|${PRETTY_NAME}|g" ${grub_cfg}
+        fi
+    done
 }
