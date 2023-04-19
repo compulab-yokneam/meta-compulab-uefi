@@ -7,3 +7,17 @@ grep -q compulab ${ETC_10_LINUX} || sed -i 's|\(SUPPORTED_INITS="\)|\1compulab-i
 
 # Add compulab values
 grep -q compulab ${GRUB_DEFAULT} || cat ${GRUB_COMPULAB_DEFAULT} >> ${GRUB_DEFAULT}
+
+cat << eof
+insmod reboot
+insmod progress
+insmod help
+insmod lsefi
+insmod echo
+insmod loadenv
+insmod fdt
+insmod sleep
+insmod regexp
+insmod part_gpt
+insmod ext2
+eof
