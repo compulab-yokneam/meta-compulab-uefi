@@ -31,6 +31,9 @@ vt_handoff="0"
 export TEXTDOMAIN=grub
 export TEXTDOMAINDIR="${datarootdir}/locale"
 
+export GRUB_RECOVERY_TITLE="recovery"
+export GRUB_DISABLE_RECOVERY=true
+
 CLASS="--class gnu-linux --class gnu --class os"
 SUPPORTED_INITS="sysvinit:/lib/sysvinit/init systemd:/lib/systemd/systemd upstart:/sbin/upstart"
 
