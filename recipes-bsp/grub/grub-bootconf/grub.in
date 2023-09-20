@@ -1,4 +1,4 @@
-GRUB_CMDLINE_LINUX_DEFAULT="rootwait console=tty1 CONSOLE compulab=yes"
+GRUB_CMDLINE_LINUX_DEFAULT="rootwait console=tty1 CONSOLE compulab=yes net.ifnames=0"
 GRUB_TERMINAL=console
 GRUB_TIMEOUT_STYLE=""
 GRUB_TIMEOUT=5
