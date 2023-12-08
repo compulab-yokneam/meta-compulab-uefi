@@ -4,5 +4,7 @@ GRUB_CMDLINE_LINUX_DEFAULT="rootwait console=tty1 CONSOLE compulab=yes net.ifnam
 GRUB_TERMINAL=console
 GRUB_TIMEOUT_STYLE=""
 GRUB_TIMEOUT=5
-GRUB_DISABLE_LINUX_UUID=false
+# if GRUB_DISABLE_LINUX_UUID is true it allows
+# using the same root=... with and w/out initrd
+GRUB_DISABLE_LINUX_UUID=true
 GRUB_DISABLE_LINUX_PARTUUID=false
