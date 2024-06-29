@@ -20,17 +20,6 @@ FILES:${PN}:append = " \
     ${EFI_FILES_PATH}/${GRUB_IMAGE_DEFAULT} \
 "
 
-pkg_postinst_ontarget:${PN}-env() {
-    CMD=/usr/bin/grub-editenv
-    ENV=boot/grub/grubenv
-    if [ -z $D ]; then
-        D="/"
-    fi
-    if [ ! -e $D/$ENV ]; then
-        $CMD $D/$ENV create
-    fi
-}
-
 pkg_postinst:${PN}-env () {
     CMD=/usr/bin/grub-editenv
     ENV=boot/grub/grubenv
