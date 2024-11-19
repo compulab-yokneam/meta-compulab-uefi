@@ -17,10 +17,13 @@ GRUB_CONF_BOOT = "grub-bootconf"
 GRUB_CONF_ROOT = "grub-bootconf.root"
 GRUB_DEFA = "grub-default"
 
+PLATFORM = ""
+PLATFORM:compulab-mx95 = "cpuidle.off=1"
+
 grub_main() {
     local in=${WORKDIR}/grub.cfg.main
     local console="$(printf "${SERIAL_CONSOLES}" | awk -F";" '($0=$2","$1"n8")')"
-    sed "s/\(default_console\)=.*\"$/\1=\"${console}\"/g;s|GRUB_BOOT_DEVICETREE|${GRUB_BOOT_DEVICETREE}|g;s|%%PARTUUID%%|${PARTUUID}|g;s|%%UUID%%|${UUID}|g;s|ROOTMODES|${ROOTMODES}|g;" ${in}
+    sed "s/\(default_console\)=.*\"$/\1=\"${console}\"/g;s|GRUB_BOOT_DEVICETREE|${GRUB_BOOT_DEVICETREE}|g;s|%%PARTUUID%%|${PARTUUID}|g;s|%%UUID%%|${UUID}|g;s|ROOTMODES|${ROOTMODES}|g;s|PLATFORM|${PLATFORM}|g" ${in}
 }
 
 grub_dtb() {
@@ -61,7 +64,7 @@ local _C=""
 for serial in $(echo -n "${SERIAL_CONSOLES}" | sed 's/;/-/g'); do
     _C=$_C" "$(printf ${serial} | awk -F"-" '{ print "console="$2","$1"n8" }')
 done
-sed "s/CONSOLE/${_C}/g" grub.in
+sed "s/CONSOLE/${_C}/g;s/PLATFORM/${PLATFORM}/g" grub.in
 }
 
 do_install:prepend() {
