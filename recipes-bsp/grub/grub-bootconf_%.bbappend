@@ -21,25 +21,25 @@ PLATFORM = ""
 PLATFORM:compulab-mx95 = "cpuidle.off=1"
 
 grub_main() {
-    local in=${WORKDIR}/grub.cfg.main
+    local in=${UNPACKDIR}/grub.cfg.main
     local console="$(printf "${SERIAL_CONSOLES}" | awk -F";" '($0=$2","$1"n8")')"
     sed "s/\(default_console\)=.*\"$/\1=\"${console}\"/g;s|GRUB_BOOT_DEVICETREE|${GRUB_BOOT_DEVICETREE}|g;s|%%PARTUUID%%|${PARTUUID}|g;s|%%UUID%%|${UUID}|g;s|ROOTMODES|${ROOTMODES}|g;s|PLATFORM|${PLATFORM}|g" ${in}
 }
 
 grub_dtb() {
-    local in=${WORKDIR}/grub.cfg.dtb
+    local in=${UNPACKDIR}/grub.cfg.dtb
     sed 's/\(^.*$\)/\t\1/' ${in}
     printf "\n"
 }
 
 grub_debug() {
-    local in=${WORKDIR}/grub.cfg.debug
+    local in=${UNPACKDIR}/grub.cfg.debug
     sed "s/\(^.*$\)/\t\1/g" ${in}
     printf "\n"
 }
 
 grub_cfg_create_boot() {
-    local in=${WORKDIR}/grub.boot.in
+    local in=${UNPACKDIR}/grub.boot.in
     sed "s|%%UUID%%|${UUID}|g" ${in}
 }
 
@@ -68,7 +68,7 @@ sed "s/CONSOLE/${_C}/g;s/PLATFORM/${PLATFORM}/g" grub.in
 }
 
 do_install:prepend() {
-    export WORKDIR="${WORKDIR}/${SRC_SUB}"
+    export UNPACKDIR="${UNPACKDIR}/${SRC_SUB}"
     grub_cfg_create_boot > ${GRUB_CONF_BOOT}
     grub_cfg_create_root > ${GRUB_CONF_ROOT}
 }
@@ -78,8 +78,8 @@ do_install:append() {
 	install -m 0664 ${GRUB_CONF_ROOT} ${D}/boot/grub/grub.cfg
 
 	install -d ${D}${sysconfdir}/grub.d/
-	install -m 0755 ${WORKDIR}/08_linux_compulab ${D}${sysconfdir}/grub.d/
-	install -m 0755 ${WORKDIR}/10_linux_compulab ${D}${sysconfdir}/grub.d/
+	install -m 0755 ${UNPACKDIR}/08_linux_compulab ${D}${sysconfdir}/grub.d/
+	install -m 0755 ${UNPACKDIR}/10_linux_compulab ${D}${sysconfdir}/grub.d/
 
 	grub_def_create > ${GRUB_DEFA}
 	grub_dtb_create > ${GRUB_CONF_DEBIAN}

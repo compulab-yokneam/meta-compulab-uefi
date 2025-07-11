@@ -11,7 +11,7 @@ PR = "r0"
 SRC_URI = " \
 	file://cl-root \
 "
-S = "${WORKDIR}"
+S = "${UNPACKDIR}"
 
 do_install() {
 	mkdir -p ${D}/usr/local/bin/

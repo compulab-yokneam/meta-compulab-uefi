@@ -1,5 +1,5 @@
 LICENSE = "GPLv2+"
-LIC_FILES_CHKSUM = "file://${WORKDIR}/README;md5=2456088a0455a82ac9e16b007de97c03"
+LIC_FILES_CHKSUM = "file://${UNPACKDIR}/README;md5=2456088a0455a82ac9e16b007de97c03"
 
 DEPENDS = "u-boot-mkimage-native"
 
@@ -8,13 +8,13 @@ SRC_URI = "file://boot.script \
 "
 
 do_compile() {
-	mkimage -C none -A arm -T script -d "${WORKDIR}/boot.script" boot.scr
+	mkimage -C none -A arm -T script -d "${UNPACKDIR}/boot.script" boot.scr
 }
 
 do_install() {
 	install -d ${D}/boot
 	install -m 0644 boot.scr ${D}/boot/boot.scr
-	install -m 0644 ${WORKDIR}/boot.script ${D}/boot/boot.script
+	install -m 0644 ${UNPACKDIR}/boot.script ${D}/boot/boot.script
 }
 
 inherit deploy
