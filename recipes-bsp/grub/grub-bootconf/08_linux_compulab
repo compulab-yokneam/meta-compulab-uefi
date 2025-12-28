@@ -3,7 +3,12 @@ GRUB_DEFAULT=/etc/default/grub
 GRUB_COMPULAB_DEFAULT=/usr/share/compulab/grub-default
 
 # Add compulab installer init
-grep -q compulab ${ETC_10_LINUX} || sed -i 's|\(SUPPORTED_INITS="\)|\1compulab-installer:/usr/local/bin/cl-init |' ${ETC_10_LINUX}
+grep -q compulab ${ETC_10_LINUX} || {
+cat << eof | tee -a ${ETC_10_LINUX} > /dev/null
+linux_entry "\${OS} (compulab-installer)" "\${version}" compulab-installer \
+"\${GRUB_CMDLINE_LINUX} \${GRUB_CMDLINE_LINUX_DEFAULT} init=/usr/local/bin/cl-init"
+eof
+}
 
 # Add compulab values
 grep -q compulab ${GRUB_DEFAULT} || cat ${GRUB_COMPULAB_DEFAULT} >> ${GRUB_DEFAULT}
