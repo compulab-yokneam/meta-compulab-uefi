@@ -18,7 +18,6 @@ GRUB_CONF_ROOT = "grub-bootconf.root"
 GRUB_DEFA = "grub-default"
 
 PLATFORM = ""
-PLATFORM:compulab-mx95 = "cpuidle.off=1"
 
 grub_main() {
     local in=${UNPACKDIR}/grub.cfg.main
