@@ -2,7 +2,7 @@ GRUB_IMAGE_DEFAULT = "bootaa64.efi"
 EFIDIR = "/EFI/BOOT"
 
 GRUB_BUILDIN:append = " all_video boot btrfs cat chain configfile echo efifwsetup efi_gop \
-		exfat ext2 fat fdt gcry_sha256 gfxterm gfxterm_background gfxterm_menu \
+		exfat ext2 fat fdt gcry_sha256 gfxterm gfxterm_background gfxmenu \
 		gzio halt hashsum help hfsplus iso9660 linux loadenv loopback ls lsefi \
 		normal ntfs part_gpt part_msdos progress reboot regexp search \
 		search_fs_file search_fs_uuid search_label serial sleep test udf "

@@ -32,7 +32,7 @@ grub-mkimage \
     -p ${grub_pref} \
     -O ${efi_data[0]} \
     fat iso9660 part_gpt part_msdos normal boot linux configfile loopback chain efifwsetup efi_gop \
-    ls search search_label search_fs_uuid search_fs_file gfxterm gfxterm_background  gfxterm_menu test \
+    ls search search_label search_fs_uuid search_fs_file gfxterm gfxterm_background  gfxmenu test \
     all_video loadenv exfat ext2 ntfs btrfs hfsplus udf echo reboot serial cat gcry_sha256 halt hashsum \
     sleep reboot regexp gzio 
 
