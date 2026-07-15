@@ -14,7 +14,7 @@ do_compile[noexec] = "1"
 do_install () {
 	ARCH_DIR="arm64-efi"
 	GRUB_MOD_DST_PATH="${D}/boot/grub/${ARCH_DIR}"
-	GRUB_MOD_SRC_PATH="${S}/../recipe-sysroot/usr/lib/grub/${ARCH_DIR}"
+	GRUB_MOD_SRC_PATH="${WORKDIR}/recipe-sysroot/usr/lib/grub/${ARCH_DIR}"
 
 	if [ -d ${GRUB_MOD_SRC_PATH} ];then
 		install -d ${GRUB_MOD_DST_PATH}
