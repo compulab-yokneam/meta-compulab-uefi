@@ -8,3 +8,4 @@ GRUB_TIMEOUT=5
 # using the same root=... with and w/out initrd
 GRUB_DISABLE_LINUX_UUID=true
 GRUB_DISABLE_LINUX_PARTUUID=false
+GRUB_DISABLE_RECOVERY=true

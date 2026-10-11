@@ -11,4 +11,10 @@ compulab_grub_extra() {
             sed -i "s|DISTRO|${PRETTY_NAME}|g" ${grub_cfg}
         fi
     done
+    # Update the system grub default file
+    local grub_default=${IMAGE_ROOTFS}/etc/default/grub
+    local grub_compulab_default=${IMAGE_ROOTFS}/usr/share/compulab/grub-default
+    if [ -f ${grub_compulab_default} ]; then
+        cat ${grub_compulab_default} >> ${grub_default}
+    fi
 }
